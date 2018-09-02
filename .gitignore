@@ -1,0 +1,11 @@
+.DS_Store
+.nano_history
+
+*.log
+*.sublime-project
+*.sublime-workspace
+
+.idea/*
+static/uploads/*
+/vendor/
+/.vagrant/

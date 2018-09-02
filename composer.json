@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "name": "vorta/phalcon-base",
+    "description": "Phalcon Project Base",
+    "type": "project",
+    "homepage": "",
+    "authors": [
+        {
+            "name": "Domagoj Polović",
+            "email": "vortablack@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "ext-phalcon": "^3.4"
+    },
+    "require-dev": {
+        "fabfuel/prophiler": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Project\\": "src/"
+        }
+    }
+}
