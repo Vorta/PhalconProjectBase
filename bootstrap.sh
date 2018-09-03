@@ -54,6 +54,7 @@ echo "alias db='mysql -u root --password=$MYSQL_PASS'" >> /home/vagrant/.bashrc
 
 mysql -u root --password=$MYSQL_PASS -e "CREATE SCHEMA IF NOT EXISTS $MYSQL_DB_NAME;"
 mysql -u root --password=$MYSQL_PASS -e "GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$MYSQL_DB_USER'@'localhost' IDENTIFIED BY '$MYSQL_DB_PASS';"
+mysql -u $MYSQL_DB_USER --password=$MYSQL_DB_PASS $MYSQL_DB_NAME < /vagrant/schemas/database.sql
 
 # PHP 7.2
 sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg

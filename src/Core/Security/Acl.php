@@ -48,14 +48,24 @@ class Acl extends Component
     /**
      * Checks if the current profile is allowed to access a resource
      *
-     * @param string $role
+     * @param array $roles
      * @param string $controller
      * @param string $action
      * @return boolean
      */
-    public function isAllowed(string $role, string $controller, string $action): bool
+    public function isAllowed(array $roles, string $controller, string $action): bool
     {
-        return $this->getAcl()->isAllowed($role, $controller, $action);
+        if (in_array(Role::ROLE_ADMIN, $roles)) {
+            return true;
+        }
+
+        foreach ($roles as $role) {
+            if ($this->getAcl()->isAllowed($role, $controller, $action)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -117,20 +127,6 @@ class Acl extends Component
         $this->persistent->set('acl', $acl);
 
         return $acl;
-    }
-
-    /**
-     * Set the acl cache file path
-     *
-     * @return string
-     */
-    protected function getFilePath(): string
-    {
-        if (!isset($this->filePath)) {
-            $this->filePath = rtrim($this->config->application->cacheDir, '\\/') . '/acl/data.txt';
-        }
-
-        return $this->filePath;
     }
 
 }

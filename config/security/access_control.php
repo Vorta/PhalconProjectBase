@@ -16,10 +16,6 @@ return new Config([
     'auth' => [
         'register'          => Role::ANONYMOUS,
         'login'             => Role::ANONYMOUS,
-        'forgotPassword'    => Role::ANONYMOUS,
-        'resetPassword'     => Role::ANONYMOUS,
-        'changePassword'    => Role::ROLE_USER,
-        'changeEmail'       => Role::ROLE_USER,
         'logout'            => Role::ROLE_USER
     ],
     'error' => [

@@ -44,6 +44,17 @@ class Group extends Model
     }
 
     /**
+     * @return array
+     */
+    public function columnMap() {
+        return [
+            'id'    => 'id',
+            'name'  => 'name',
+            'roles' => 'roles'
+        ];
+    }
+
+    /**
      * Execute before storing to DB
      */
     public function beforeSave(): void

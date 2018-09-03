@@ -1,3 +1,3 @@
-Let me see the future.
+<h1>Home page</h1>
 
 {{ flash.output() }}

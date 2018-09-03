@@ -2,9 +2,9 @@
 
 namespace Project\Core\Security;
 
-use Exception;
 use Project\Core\Models\User;
 use Phalcon\Mvc\User\Component;
+use Project\Core\Exception\AuthException;
 
 /**
  * Class Auth
@@ -20,7 +20,7 @@ class Auth extends Component
     /**
      * @param string $username
      * @param string $plainPassword
-     * @throws Exception
+     * @throws AuthException
      */
     public function check(string $username, string $plainPassword): void
     {
@@ -28,18 +28,18 @@ class Auth extends Component
         $user = User::findFirstByUsername($username);
         if ($user === false) {
             $this->authThrottling();
-            throw new Exception('Wrong email/password combination');
+            throw new AuthException('Wrong email/password combination');
         }
 
         if (!$user->checkPassword($plainPassword)) {
             $this->authThrottling();
-            throw new Exception('Wrong email/password combination');
+            throw new AuthException('Wrong email/password combination');
         }
 
         $identity = new Identity(
-            $user->id,
-            $user->username,
-            $user->group->getRoles()
+            $user->getId(),
+            $user->getUsername(),
+            $user->getRoles()
         );
 
         $this->session->set(self::IDENTITY_KEY, $identity);
@@ -72,7 +72,7 @@ class Auth extends Component
 
     /**
      * @return User
-     * @throws Exception
+     * @throws AuthException
      */
     public function getUser(): User
     {
@@ -85,7 +85,7 @@ class Auth extends Component
 
         if ($user == false) {
             $this->remove();
-            throw new Exception('User account deleted');
+            throw new AuthException('User account deleted');
         }
         return $user;
     }

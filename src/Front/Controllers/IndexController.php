@@ -30,6 +30,6 @@ class IndexController extends ControllerBase
      */
     public function adminOnlyAction()
     {
-        echo "You must be admin";
+        echo "You must be ROLE_ADMIN";
     }
 }

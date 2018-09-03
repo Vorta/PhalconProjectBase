@@ -14,6 +14,21 @@ $router->add('/', [
     'action'        => 'index'
 ]);
 
+$router->add('/register', [
+    'controller'    => 'auth',
+    'action'        => 'register'
+]);
+
+$router->add('/login', [
+    'controller'    => 'auth',
+    'action'        => 'login'
+]);
+
+$router->add('/logout', [
+    'controller'    => 'auth',
+    'action'        => 'logout'
+]);
+
 $router->add('/user', [
     'controller'    => 'index',
     'action'        => 'userOnly'

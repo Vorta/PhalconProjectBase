@@ -58,7 +58,7 @@ class Identity
     /**
      * @return array
      */
-    public function getUserRoles(): array
+    public function getRoles(): array
     {
         return $this->roles;
     }

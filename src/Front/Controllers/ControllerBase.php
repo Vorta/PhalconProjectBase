@@ -2,10 +2,18 @@
 
 namespace Project\Front\Controllers;
 
+use Project\Core\Security\Acl;
+use Project\Core\Security\Auth;
 use Project\Core\Security\Identity;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
 
+/**
+ * Class ControllerBase
+ * @package Project\Front\Controllers
+ * @property Auth auth
+ * @property Acl acl
+ */
 class ControllerBase extends Controller
 {
     public function beforeExecuteRoute(Dispatcher $dispatcher): bool
@@ -25,7 +33,7 @@ class ControllerBase extends Controller
                 return false;
             }
 
-            if (!$this->acl->isAllowed($identity->getUserRoles(), $controllerName, $actionName)) {
+            if (!$this->acl->isAllowed($identity->getRoles(), $controllerName, $actionName)) {
                 $this->flash->notice('You don\'t have permission to access this page!');
 
                 $this->response->redirect('/');

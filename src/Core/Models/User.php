@@ -3,29 +3,32 @@
 namespace Project\Core\Models;
 
 use Phalcon\Mvc\Model;
+use Phalcon\Security;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
+use Project\Core\Security\Role;
 
 /**
  * Class User
  * @package Project\Core\Models
+ * @property Group group
  */
 class User extends Model
 {
     /**
      * @var integer
      */
-    public $id;
+    private $id;
 
     /**
      * @var string
      */
-    public $username;
+    private $username;
 
     /**
      * @var string
      */
-    public $email;
+    private $email;
 
     /**
      * @var string
@@ -35,7 +38,7 @@ class User extends Model
     /**
      * @var integer
      */
-    public $groupId;
+    private $groupId;
 
     /**
      * Model initialization
@@ -51,6 +54,19 @@ class User extends Model
                 'reusable'  => true
             ]
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function columnMap() {
+        return [
+            'id'        => 'id',
+            'username'  => 'username',
+            'email'     => 'email',
+            'password'  => 'password',
+            'group_id'  => 'groupId'
+        ];
     }
 
     /**
@@ -74,7 +90,9 @@ class User extends Model
      */
     public function setPassword(string $plainPassword): void
     {
-        $this->password = $this->security->hash($plainPassword);
+        /** @var Security $security */
+        $security = $this->getDI()->get('security');
+        $this->password = $security->hash($plainPassword);
     }
 
     /**
@@ -83,6 +101,80 @@ class User extends Model
      */
     public function checkPassword(string $plainPassword): bool
     {
-        return $this->security->checkHash($plainPassword, $this->password);
+        /** @var Security $security */
+        $security = $this->getDI()->get('security');
+        return $security->checkHash($plainPassword, $this->password);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param $email
+     */
+    public function setEmail($email): void
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return Group
+     */
+    public function getGroup(): Group
+    {
+        return $this->group;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        if ($this->group === FALSE) {
+            return [Role::ROLE_USER];
+        }
+        return $this->group->getRoles();
+    }
+
+    /**
+     * Handles creation of a new user
+     * @param string $username
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
+    public static function fromRegistration(
+        string $username,
+        string $email,
+        string $password
+    ): User {
+        $user = new User([
+            'username'  => $username,
+            'email'     => $email
+        ]);
+        $user->setPassword($password);
+
+        return $user;
     }
 }
