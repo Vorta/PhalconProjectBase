@@ -6,6 +6,7 @@ use Phalcon\Mvc\Model;
 use Phalcon\Security;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Validation\Validator\PresenceOf;
 use Project\Core\Security\Role;
 
 /**
@@ -81,6 +82,22 @@ class User extends Model
             "message" => "This email is already in use"
         ]));
 
+        $validator->add('email', new PresenceOf([
+            "message" => "Email is mandatory"
+        ]));
+
+        $validator->add('username', new Uniqueness([
+            "message" => "This username is already in use"
+        ]));
+
+        $validator->add('username', new PresenceOf([
+            "message" => "Username is mandatory"
+        ]));
+
+        $validator->add('password', new PresenceOf([
+            "message" => "Password is mandatory"
+        ]));
+
         return $this->validate($validator);
     }
 
@@ -147,6 +164,7 @@ class User extends Model
     }
 
     /**
+     * Get user's role. Default role is ROLE_USER
      * @return array
      */
     public function getRoles(): array

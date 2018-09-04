@@ -61,7 +61,7 @@ sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gp
 echo 'deb https://packages.sury.org/php/ stretch main' | sudo tee -a /etc/apt/sources.list
 
 sudo aptitude update -y
-sudo aptitude install -y php7.2-fpm php7.2-mysql php7.2-curl php7.2-dev php7.2-json php7.2-zip
+sudo aptitude install -y php7.2-fpm php7.2-mysql php7.2-curl php7.2-dev php7.2-json php7.2-zip php7.2-mbstring
 
 # Configure PHP
 sudo sed -i.bak 's/^;cgi.fix_pathinfo.*$/cgi.fix_pathinfo = 1/g' /etc/php/7.2/fpm/php.ini
@@ -91,6 +91,7 @@ sudo aptitude install -y git
 git clone --depth=1 "git://github.com/phalcon/cphalcon.git"
 cd cphalcon/build
 sudo ./install
+cd
 
 sudo tee -a /etc/php/7.2/mods-available/phalcon.ini << END
 ; configuration for php common module
@@ -109,6 +110,14 @@ sudo sed -i "s/dbfilename dump\.rdb/dbfilename redis.rdb/" /etc/redis/redis.conf
 
 sudo aptitude install -y php-redis
 
+# Redis admin
+cd
+git clone https://github.com/ErikDubbelboer/phpRedisAdmin.git
+cd phpRedisAdmin
+git clone https://github.com/nrk/predis.git vendor
+cd
+sudo chmod -R 775 phpRedisAdmin
+
 # Composer
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -119,70 +128,70 @@ sudo touch /etc/nginx/conf.d/project.conf
 sudo tee -a /etc/nginx/conf.d/project.conf << END
 server {
 
-	listen 80;
-	server_name www.phalcon-project.test;
+    listen 80;
+    server_name www.phalcon-project.test;
 
-	index index.php index.html;
+    index index.php index.html;
 
-	set \$root_path		/vagrant/public;
-	set \$static_path	/vagrant/static;
-	root				\$root_path;
+    set \$root_path     /vagrant/public;
+    set \$static_path   /vagrant/static;
+    root                \$root_path;
 
-	charset utf-8;
-	autoindex off;
+    charset utf-8;
+    autoindex off;
 
-	access_log /var/log/nginx/project_access.log;
-	error_log /var/log/nginx/project_error.log;
-	rewrite_log on;
+    access_log /var/log/nginx/project_access.log;
+    error_log /var/log/nginx/project_error.log;
+    rewrite_log on;
 
-	location @rewrite {
-		rewrite ^/(.*)\$ /index.php?_url=/\$1;
-	}
+    location @rewrite {
+        rewrite ^/(.*)\$ /index.php?_url=/\$1;
+    }
 
-	try_files \$uri \$uri/ @rewrite;
+    try_files \$uri \$uri/ @rewrite;
 
-	# Remove trailing slash to please routing system.
-	if (!-d \$request_filename) {
-		rewrite ^/(.+)/\$ /\$1 permanent;
-	}
+    # Remove trailing slash to please routing system.
+    if (!-d \$request_filename) {
+        rewrite ^/(.+)/\$ /\$1 permanent;
+    }
 
-	# PHP FPM configuration.
-	location ~ ^/index\.php(/|\$) {
-		fastcgi_pass unix:/run/php/php7.2-fpm.sock;
-		fastcgi_index index.php;
-		fastcgi_split_path_info ^(.+\.php)(.*)\$;
+    # PHP FPM configuration.
+    location ~ ^/index\.php(/|\$) {
+        fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_split_path_info ^(.+\.php)(.*)\$;
 
-		include /etc/nginx/fastcgi_params;
+        include /etc/nginx/fastcgi_params;
 
-		fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-		fastcgi_param DOCUMENT_ROOT \$realpath_root;
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT \$realpath_root;
 
-		fastcgi_read_timeout 300; 
-	}
+        fastcgi_read_timeout 300;
+    }
 
-	location = /favicon.ico {
-		root \$static_path;
-		rewrite favicon.ico /assets/browser_icons/favicon.ico;
-		break;
-	}
+    location = /favicon.ico {
+        root \$static_path;
+        rewrite favicon.ico /assets/browser_icons/favicon.ico;
+        break;
+    }
 
-	location = /apple-touch-icon-precomposed.png {
-		root \$static_path;
-		rewrite apple-touch-icon-precomposed.png /assets/browser_icons/apple-touch-icon-precomposed.png;
-		break;
-	}
+    location = /apple-touch-icon-precomposed.png {
+        root \$static_path;
+        rewrite apple-touch-icon-precomposed.png /assets/browser_icons/apple-touch-icon-precomposed.png;
+        break;
+    }
 
-	location = /apple-touch-icon.png {
-		root \$static_path;
-		rewrite apple-touch-icon.png /assets/browser_icons/apple-touch-icon.png;
-		break;
-	}
+    location = /apple-touch-icon.png {
+        root \$static_path;
+        rewrite apple-touch-icon.png /assets/browser_icons/apple-touch-icon.png;
+        break;
+    }
 
-	location = /robots.txt {
-		root \$static_path;
-		#rewrite robots.txt /robots.txt;
-		break;
-	}
+    location = /robots.txt {
+        root \$static_path;
+        #rewrite robots.txt /robots.txt;
+        break;
+    }
 
 }
 END
@@ -191,21 +200,66 @@ sudo touch /etc/nginx/conf.d/project_static.conf
 sudo tee -a /etc/nginx/conf.d/project_static.conf << END
 server {
 
-	listen			80;
-	server_name		static.phalcon-project.test;
+    listen          80;
+    server_name     static.phalcon-project.test;
 
-	root			/vagrant/static;
+    root            /vagrant/static;
 
-	charset utf-8;
-	autoindex off;
+    charset utf-8;
+    autoindex off;
 
-	access_log /var/log/nginx/project_static_access.log;
-	error_log /var/log/nginx/project_static_error.log;
-	rewrite_log on;
+    access_log /var/log/nginx/project_static_access.log;
+    error_log /var/log/nginx/project_static_error.log;
+    rewrite_log on;
 
-	add_header 'Access-Control-Allow-Origin' '*';
-	add_header 'Access-Control-Allow-Methods' 'GET';
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Methods' 'GET';
 
+}
+END
+
+sudo touch /etc/nginx/conf.d/redis-admin.conf
+sudo tee -a /etc/nginx/conf.d/redis-admin.conf << END
+server {
+
+    listen 80;
+    server_name redis-admin.local;
+
+    index index.php index.html;
+
+    root    /home/vagrant/phpRedisAdmin;
+
+    charset utf-8;
+    autoindex off;
+
+    access_log /var/log/nginx/redisadmin_access.log;
+    error_log /var/log/nginx/redisadmin_error.log;
+    rewrite_log on;
+
+    location @rewrite {
+        rewrite ^/(.*)\$ /index.php?_url=/\$1;
+    }
+
+    try_files \$uri \$uri/ @rewrite;
+
+    # Remove trailing slash to please routing system.
+    if (!-d \$request_filename) {
+        rewrite ^/(.+)/\$ /\$1 permanent;
+    }
+
+    # PHP FPM configuration.
+    location ~ \.php\$ {
+        fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_split_path_info ^(.+\.php)(.*)\$;
+
+        include /etc/nginx/fastcgi_params;
+
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT \$realpath_root;
+
+        fastcgi_read_timeout 300;
+    }
 }
 END
 

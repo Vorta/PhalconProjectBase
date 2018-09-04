@@ -6,7 +6,7 @@ namespace Project\Core\Security;
  * Class Identity, stored in session if user is authenticated
  * @package Project\Core\Security
  */
-class Identity
+class Identity implements \Serializable
 {
     /**
      * @var int
@@ -24,6 +24,11 @@ class Identity
     private $roles;
 
     /**
+     * @var \DateTime
+     */
+    private $createdAt;
+
+    /**
      * Identity constructor.
      * @param int $userId
      * @param string $username
@@ -37,6 +42,8 @@ class Identity
         $this->userId = $userId;
         $this->username = $username;
         $this->roles = $roles;
+
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -61,5 +68,40 @@ class Identity
     public function getRoles(): array
     {
         return $this->roles;
+    }
+
+    /**
+     * String representation of object
+     * @link https://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+        return serialize([
+            $this->userId,
+            $this->username,
+            $this->roles,
+            $this->createdAt
+        ]);
+    }
+
+    /**
+     * Constructs the object
+     * @link https://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->userId,
+            $this->username,
+            $this->roles,
+            $this->createdAt
+            ) = unserialize($serialized);
     }
 }

@@ -35,5 +35,11 @@ http://www.phalcon-project.test/user - Accessible only with ROLE_USER or ROLE_AD
 http://www.phalcon-project.test/admin - Accessible only with ROLE_ADMIN
 ```
 
+## Redis admin
+To be able to access Redis admin add the following line to the hosts file:
+```
+192.168.50.10 redis-admin.local
+```
+
 ## Planned for the future:
 - CLI

@@ -3,6 +3,10 @@
 namespace Project\Core\Models;
 
 use Phalcon\Mvc\Model;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Uniqueness;
+use Project\Core\Security\Role;
 
 /**
  * Class Group
@@ -13,12 +17,12 @@ class Group extends Model
     /**
      * @var integer
      */
-    public $id;
+    private $id;
 
     /**
      * @var string
      */
-    public $name;
+    private $name;
 
     /**
      * @var array
@@ -55,6 +59,29 @@ class Group extends Model
     }
 
     /**
+     * Validate provided information prior to save
+     * @return bool
+     */
+    public function validation(): bool
+    {
+        $validator = new Validation();
+
+        $validator->add('name', new Uniqueness([
+            "message" => "A group with this name already exists"
+        ]));
+
+        $validator->add('name', new PresenceOf([
+            "message" => "Group name is mandatory"
+        ]));
+
+        $validator->add('roles', new PresenceOf([
+            "message" => "At least one group role is required"
+        ]));
+
+        return $this->validate($validator);
+    }
+
+    /**
      * Execute before storing to DB
      */
     public function beforeSave(): void
@@ -76,6 +103,30 @@ class Group extends Model
     public function afterSave(): void
     {
         $this->roles = explode(',', $this->roles);
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
     }
 
     /**
