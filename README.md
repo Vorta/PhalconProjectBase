@@ -20,5 +20,20 @@ touch .debug
 ## Database schema
 Database schema is stored in /schemas/ folder. It is loaded into Vagrant's MySQL database when provisioning.
 
+## Running locally
+Vagrant is preset to run a local instance at 192.168.50.10. Add the following line to your hosts file to be able to access it:
+```
+192.168.50.10 static.phalcon-project.test www.phalcon-project.test
+```
+#### Working pages:
+```
+http://www.phalcon-project.test/
+http://www.phalcon-project.test/register
+http://www.phalcon-project.test/login
+http://www.phalcon-project.test/logout
+http://www.phalcon-project.test/user - Accessible only with ROLE_USER or ROLE_ADMIN
+http://www.phalcon-project.test/admin - Accessible only with ROLE_ADMIN
+```
+
 ## Planned for the future:
 - CLI

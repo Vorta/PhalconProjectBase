@@ -209,48 +209,6 @@ server {
 }
 END
 
-sudo touch /etc/nginx/conf.d/project_debug.conf
-sudo tee -a /etc/nginx/conf.d/project_debug.conf << END
-server {
-
-	listen			80;
-	server_name		debug.phalcon-project.test;
-
-	index index.php index.html index.htm;
-
-	set		\$root_path		/vagrant/debug;
-	root	\$root_path;
-
-	charset utf-8;
-	autoindex off;
-
-	access_log	off;
-	error_log	off;
-
-	try_files \$uri \$uri/ @rewrite;
-
-	location @rewrite {
-		rewrite ^/(.*)\$ /index.php?_url=/\$1;
-	}
-
-	location ~ \.php\$ {
-		fastcgi_pass unix:/run/php/php7.2-fpm.sock;
-		fastcgi_index index.php;
-		fastcgi_split_path_info ^(.+\.php)(.*)\$;
-
-		include /etc/nginx/fastcgi_params;
-
-		fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-		fastcgi_param DOCUMENT_ROOT \$realpath_root;
-	}
-
-	location ~* ^/(assets|css|js|img|ico|flv|swf|download)/(.+)\$ {
-		root \$root_path;
-	}
-
-}
-END
-
 echo "cd /vagrant" >> /home/vagrant/.bashrc
 
 # Restart servers
