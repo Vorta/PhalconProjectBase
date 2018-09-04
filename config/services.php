@@ -11,6 +11,7 @@ use Phalcon\Mvc\Dispatcher;
 use Project\Core\Security\Acl;
 use Project\Core\Security\Auth;
 use Phalcon\Flash\Session as Flash;
+use Project\Core\Plugin\ExceptionPlugin;
 use Phalcon\Assets\Manager as AssetsManager;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Mvc\Model\Manager as ModelManager;
@@ -51,11 +52,19 @@ $di->setShared('eventsManager', function () {
 });
 
 /**
- * Setup the dispatcher
+ * Setup the dispatcher with error handling
  */
 $di->setShared('dispatcher', function () {
     $dispatcher = new Dispatcher();
-    $dispatcher->setEventsManager($this->getEventsManager());
+
+    /** @var EventsManager $eventsManager */
+    $eventsManager = $this->getEventsManager();
+    $eventsManager->attach(
+        'dispatch:beforeException',
+        new ExceptionPlugin()
+    );
+
+    $dispatcher->setEventsManager($eventsManager);
     return $dispatcher;
 });
 
@@ -215,6 +224,10 @@ $di->set('logger', function ($filename = null, $format = null) {
     $format     = $format ?: $config->logger->format;
     $filename   = trim($filename ?: $config->logger->filename, '\\/');
     $path       = rtrim($config->logger->path, '\\/') . DIRECTORY_SEPARATOR;
+
+    if (!file_exists($path)) {
+        mkdir($path, 0777, TRUE);
+    }
 
     $formatter  = new FormatterLine($format, $config->logger->date);
     $logger     = new FileLogger($path . $filename);

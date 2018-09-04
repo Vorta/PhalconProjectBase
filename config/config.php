@@ -24,9 +24,9 @@ return new Phalcon\Config([
         'cacheDir'      => PROJECT_ROOT . '/var/'
     ],
     'logger' => [
-        'path'          => PROJECT_ROOT . '/var/logs/',
-        'format'        => '%date% [%type%] %message%',
-        'date'          => 'D j H:i:s',
+        'path'          => PROJECT_ROOT . '/var/log/',
+        'format'        => '[%date%] %type%: %message%',
+        'date'          => 'Y-m-d H:i:s',
         'logLevel'      => Phalcon\Logger::DEBUG,
         'filename'      => 'app.log',
     ]

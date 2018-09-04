@@ -6,6 +6,7 @@ use Fabfuel\Prophiler\Profiler;
 use Fabfuel\Prophiler\Plugin\Manager\Phalcon as PluginManager;
 
 define('PROJECT_ROOT', dirname(__DIR__));
+define('DEBUG', file_exists(PROJECT_ROOT .'/.debug'));
 
 // Check if we're on HTTPS
 define(
@@ -22,31 +23,49 @@ preg_match(
 define('DOMAIN', $domain[1]);
 define('TLD', $domain[2]);
 
-include PROJECT_ROOT .'/config/dev/debug.php';
+try {
 
-// Start dependency injector
-$di = new DI();
+    if (DEBUG) {
+        include PROJECT_ROOT .'/config/dev/debug.php';
+    }
 
-// Read the loader
-include PROJECT_ROOT .'/config/loader.php';
+    // Start dependency injector
+    $di = new DI();
 
-$profiler = new Profiler();
+    // Read the loader
+    include PROJECT_ROOT .'/config/loader.php';
 
-// Read the services
-include PROJECT_ROOT .'/config/services.php';
+    if (DEBUG) {
+        $profiler = new Profiler();
+    }
 
-$pluginManager = new PluginManager($profiler);
-$pluginManager->register();
+    // Read the services
+    include PROJECT_ROOT .'/config/services.php';
 
-// Startup the application
-$application = new Application($di);
+    $di->get('logger')->info('Services injected');
 
-// Tell her about the modules
-include PROJECT_ROOT .'/config/modules.php';
+    if (DEBUG) {
+        $pluginManager = new PluginManager($profiler);
+        $pluginManager->register();
+    }
 
-// Engage!
-echo $application->handle()->getContent();
+    // Startup the application
+    $application = new Application($di);
 
-$toolbar = new \Fabfuel\Prophiler\Toolbar($profiler);
-$toolbar->addDataCollector(new \Fabfuel\Prophiler\DataCollector\Request());
-echo $toolbar->render();
+    // Tell her about the modules
+    include PROJECT_ROOT .'/config/modules.php';
+
+    // Engage!
+    echo $application->handle()->getContent();
+
+    if (DEBUG) {
+        $toolbar = new \Fabfuel\Prophiler\Toolbar($profiler);
+        $toolbar->addDataCollector(new \Fabfuel\Prophiler\DataCollector\Request());
+        echo $toolbar->render();
+    }
+
+} catch (\Exception $e) {
+    $di->get('logger')->error($e->getMessage());
+}
+
+$di->get('logger')->info('Shutdown');
