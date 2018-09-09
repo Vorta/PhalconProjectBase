@@ -99,7 +99,7 @@ $di->setShared('view', function () {
             $volt->setOptions([
                 'compiledPath'      => $pathToCompiled,
                 'compiledSeparator' => '_',
-                'compileAlways'     => true
+                'compileAlways'     => DEBUG
             ]);
 
             return $volt;
