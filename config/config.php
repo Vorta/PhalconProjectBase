@@ -18,16 +18,20 @@ return new Phalcon\Config([
         'prefix'        => 'project_'
     ],
     'application' => [
-        'publicUrl'     => "http". (SSL ? "s" : "") ."://www.". DOMAIN .".". TLD,
-        'staticUrl'     => "http". (SSL ? "s" : "") ."://static.". DOMAIN .".". TLD,
+        'publicUrl'     => 'http'. (SSL ? 's' : '') .'://www.'. DOMAIN .'.'. TLD .'/',
+        'staticUrl'     => 'http'. (SSL ? 's' : '') .'://static.'. DOMAIN .'.'. TLD .'/',
         'cryptSalt'     => 'm&YSF7!XbCpuZ@cr!J?hfXK=#$up?d?7B#ukjCj^$QqYkGzrbV#qy@x!gFA*?9T*',
-        'cacheDir'      => PROJECT_ROOT . '/var/'
+        'cacheDir'      => PROJECT_ROOT .'/var/'
     ],
     'logger' => [
-        'path'          => PROJECT_ROOT . '/var/log/',
+        'path'          => PROJECT_ROOT .'/var/log/',
         'format'        => '[%date%] %type%: %message%',
         'date'          => 'Y-m-d H:i:s',
         'logLevel'      => Phalcon\Logger::DEBUG,
         'filename'      => 'app.log',
+    ],
+    'translations' => [
+        'defaultLang'   => 'en',
+        'directory'     => PROJECT_ROOT .'/config/translations/'
     ]
 ]);

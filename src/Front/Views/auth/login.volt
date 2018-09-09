@@ -1,8 +1,8 @@
 {{ flash.output() }}
 
-<h1>Login</h1>
+<h1>{{ t._('LBL_LOGIN') }}</h1>
 
-<form action="login" method="post">
+<form action="{{ url.get(['for': 'login']) }}" method="post">
 
     {% for element in form %}
 
@@ -12,5 +12,5 @@
 
     {% endfor %}
 
-    <button type="submit">Login!</button>
+    <button type="submit">{{ t._('LBL_LOGIN') }}!</button>
 </form>

@@ -12,15 +12,17 @@ use Project\Core\Security\Acl;
 use Project\Core\Security\Auth;
 use Phalcon\Flash\Session as Flash;
 use Project\Core\Plugin\ExceptionPlugin;
+use Phalcon\Translate\Adapter\NativeArray;
 use Phalcon\Assets\Manager as AssetsManager;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Mvc\Model\Manager as ModelManager;
-use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Db\Adapter\Pdo\Mysql as DBAdapter;
 use Phalcon\Logger\Adapter\File as FileLogger;
+use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Logger\Formatter\Line as FormatterLine;
 use Phalcon\Session\Adapter\Redis as SessionAdapter;
 use Phalcon\Mvc\Model\Metadata\Redis as MetaDataAdapter;
+use Project\Core\Exception\TranslationNotFoundException;
 
 /**
  * Register the global configuration
@@ -71,7 +73,7 @@ $di->setShared('dispatcher', function () {
 /**
  * Loading routes from the routes.php file
  */
-$di->set('router', function () {
+$di->set('router', function () use ($di) {
     return require PROJECT_ROOT . '/config/router.php';
 });
 
@@ -138,6 +140,7 @@ $di->set('modelsMetadata', function () {
  * Session setup
  */
 $di->set('session', function () {
+    $this->getLogger()->info("Session initialized");
     $config = $this->getConfig();
     $session = new SessionAdapter($config->redis->toArray());
     $session->start();
@@ -211,7 +214,6 @@ $di->setShared('aclResources', function() {
  */
 $di->set('acl', function () {
     $acl = new Acl();
-    //$acl->addResources($this->getShared('aclResources'));
     return $acl;
 });
 
@@ -236,6 +238,33 @@ $di->set('logger', function ($filename = null, $format = null) {
     $logger->setLogLevel($config->logger->logLevel);
 
     return $logger;
+});
+
+/**
+ * Detect and make the translation file available
+ */
+$di->setShared('translation', function () {
+    $config = $this->getConfig();
+    // Get language. Fallback to default if language was not resolved
+    $lang = $this->has('lang')
+        ? $this->getLang()
+        : $config->translations->defaultLang;
+
+    $path = $config->translations->directory ."/$lang.php";
+
+    if (!file_exists($path)) {
+        throw new TranslationNotFoundException($lang);
+    }
+
+    return include $path;
+});
+
+/**
+ * Translation service
+ * Fallback to default language is an option as wrong language should result with 404 in most cases
+ */
+$di->setShared('translator', function () {
+    return new NativeArray($this->getTranslation());
 });
 
 /**
@@ -277,4 +306,6 @@ $di->set('response', function () {
 /**
  * Share the profiler
  */
-$di->setShared('profiler', $profiler);
+$di->setShared('profiler', function () use ($profiler) {
+    return $profiler;
+});

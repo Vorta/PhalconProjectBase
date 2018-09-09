@@ -144,11 +144,7 @@ server {
     error_log /var/log/nginx/project_error.log;
     rewrite_log on;
 
-    location @rewrite {
-        rewrite ^/(.*)\$ /index.php?_url=/\$1;
-    }
-
-    try_files \$uri \$uri/ @rewrite;
+    try_files \$uri \$uri/ /index.php?_url=\$uri&\$args;
 
     # Remove trailing slash to please routing system.
     if (!-d \$request_filename) {
@@ -159,7 +155,7 @@ server {
     location ~ ^/index\.php(/|\$) {
         fastcgi_pass unix:/run/php/php7.2-fpm.sock;
         fastcgi_index index.php;
-        fastcgi_split_path_info ^(.+\.php)(.*)\$;
+        fastcgi_split_path_info ^(.+\.php)(/.*)\$;
 
         include /etc/nginx/fastcgi_params;
 

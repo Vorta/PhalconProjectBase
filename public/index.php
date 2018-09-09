@@ -65,7 +65,12 @@ try {
     }
 
 } catch (\Exception $e) {
-    $di->get('logger')->error($e->getMessage());
+    echo "Error";
+    $di->get('logger')->error(
+        $e->getMessage()
+        ."; File: ". $e->getFile()
+        ."; Line: ". $e->getLine()
+    );
 }
 
 $di->get('logger')->info('Shutdown');

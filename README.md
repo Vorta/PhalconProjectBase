@@ -9,6 +9,7 @@ The project base includes:
 - Debug mode control
 - Complete Vagrant bootstrap
 - Ready Auth control with permission management
+- Multilingual support
 - Logger
 
 ## Debug mode
@@ -40,6 +41,20 @@ To be able to access Redis admin add the following line to the hosts file:
 ```
 192.168.50.10 redis-admin.local
 ```
+
+## Routing and translations
+The translations are integrated with the router, allowing the routes themselves to be translated.
+Translation files are stored in `config/translations/{lang}.php` as arrays.
+The translation file is loaded and available through the DI on the beginning.
+It consists of 3 main keys:
+- Lang
+  - Holds just the name of the lang, if it is needed to double-check what will be printed
+- Routes
+  - Holds the translations for the app's routes. Translations are arranged in 'route-name' => '/translated/route' fashion.
+- Content
+  - Contains the content translations and is loaded into the Phalcon's translation service on the first use.
+
+It is not necessary to translate every route. Defaults will be used for all non-translated routes. The route definition is in `config/routes.php`.
 
 ## Planned for the future:
 - CLI

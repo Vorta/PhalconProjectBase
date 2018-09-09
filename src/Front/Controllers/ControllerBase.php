@@ -16,17 +16,23 @@ use Phalcon\Mvc\Dispatcher;
  */
 class ControllerBase extends Controller
 {
+    /**
+     * @param Dispatcher $dispatcher
+     * @return bool
+     */
     public function beforeExecuteRoute(Dispatcher $dispatcher): bool
     {
         $controllerName = $dispatcher->getControllerName();
         $actionName = $dispatcher->getActionName();
+
+        $this->t = $this->di->getTranslator();
+        $this->view->t = $this->t;
 
         if ($this->acl->isPrivate($controllerName, $actionName)) {
             /** @var Identity $identity */
             $identity = $this->auth->getIdentity();
 
             if (!$identity instanceof Identity) {
-
                 $this->flash->notice('You don\'t have permission to access this page! Log in first!');
 
                 $this->response->redirect('/');
