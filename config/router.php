@@ -1,7 +1,6 @@
 <?php
 
 use Phalcon\Mvc\Router;
-use Phalcon\Mvc\Router\Group as RouterGroup;
 
 /**
  * Router definition
@@ -17,13 +16,26 @@ $router->setDefaults([
 
 /**
  * Resolve language
+ * Pre-configured language has priority
  */
-preg_match(
-    "/^\/([a-z]{2})(\/|$)/",
-    $router->getRewriteUri(),
-    $output);
+if (isset($_SERVER['LANG'])) {
+    // Using pre-configured language
+    $lang = $_SERVER['LANG'];
+} else {
+    // Using uri language
+    preg_match(
+        "/^\/([a-z]{2})(\/|$)/",
+        $router->getRewriteUri(),
+        $output);
 
-$lang = $output[1] ?? null;
+    $lang = $output[1] ?? null;
+
+    // URI must contain a language, go to error controller if it doesn't
+    $router->add('/', [
+        'controller'    => 'error',
+        'action'        => 'languageUndefined'
+    ]);
+}
 
 /**
  * Load routes if language exists.
@@ -38,13 +50,10 @@ if (!is_null($lang)) {
     });
 
     /**
-     * Load the lang-related routes if requested language existed
+     * Load the lang-related routes if requested language can be provided by DI
      */
     if ($di->getLang() === $lang) {
         $translation = $di->getTranslation();
-
-        $routeGroup = new RouterGroup();
-        $routeGroup->setPrefix('/'. $lang);
 
         $routes = include __DIR__ . '/routes.php';
 
@@ -53,25 +62,20 @@ if (!is_null($lang)) {
          *  Route translation also happens here
          */
         foreach ($routes as $routeName => $data) {
-            $routeGroup
-                ->add(
-                    $translation['routes'][$routeName] ?? $data['route'],
-                    $data['resources']
-                )
+            // Prefix route with language if URI language is used
+            $route = isset($_SERVER['LANG']) ? '' : '/'. $lang;
+            // Fetch a proper configured route
+            $route .= $translation['routes'][$routeName] ?? $data['route'];
+            // Remove trailing slash unless the slash itself is a route
+            $route = preg_replace('/(?!^)\/$/', '', $route);
+
+            // Add the route
+            $router
+                ->add($route, $data['resources'])
                 ->setName($routeName);
         }
-
-        $router->mount($routeGroup);
     }
 }
-
-/**
- * This will direct us to the default language on the first visit of the domain
- */
-$router->add('/', [
-    'controller'    => 'error',
-    'action'        => 'languageUndefined'
-]);
 
 $router->notFound([
     'controller'    => 'error',

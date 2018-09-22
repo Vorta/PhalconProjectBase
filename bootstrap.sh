@@ -76,11 +76,12 @@ sudo sed -i "s/.*listen\.mode.*/listen.mode = 0666/" /etc/php/7.2/fpm/pool.d/www
 sudo aptitude install -y php-xdebug
 sudo aptitude install -y libpng-dev
 
-echo "-- Configure xDebug (idekey = PHP_STORM) --"
+echo "-- Configure xDebug --"
 sudo tee -a /etc/php/7.2/mods-available/xdebug.ini << END
 xdebug.remote_enable=1
 xdebug.remote_connect_back=1
-xdebug.remote_port=9001
+xdebug.remote_host=192.168.50.1
+xdebug.remote_port=9000
 xdebug.idekey=PHP_STORM
 END
 
@@ -119,6 +120,8 @@ cd
 sudo chmod -R 775 phpRedisAdmin
 
 # Composer
+sudo aptitude install -y unzip
+
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
 # Configure host
@@ -152,7 +155,7 @@ server {
     }
 
     # PHP FPM configuration.
-    location ~ ^/index\.php(/|\$) {
+    location ~ \.php(/|\$) {
         fastcgi_pass unix:/run/php/php7.2-fpm.sock;
         fastcgi_index index.php;
         fastcgi_split_path_info ^(.+\.php)(/.*)\$;
@@ -191,6 +194,77 @@ server {
 
 }
 END
+
+sudo touch /etc/nginx/conf.d/project_hr.conf
+sudo tee -a /etc/nginx/conf.d/project_hr.conf << END
+server {
+
+    listen 80;
+    server_name www.phalcon-project.hr.test;
+
+    index index.php index.html;
+
+    set \$root_path     /vagrant/public;
+    set \$static_path   /vagrant/static;
+    root                \$root_path;
+
+    charset utf-8;
+    autoindex off;
+
+    access_log /var/log/nginx/project_hr_access.log;
+    error_log /var/log/nginx/project_hr_error.log;
+    rewrite_log on;
+
+    try_files \$uri \$uri/ /index.php?_lang=hr&_url=\$uri&\$args;
+
+    # Remove trailing slash to please routing system.
+    if (!-d \$request_filename) {
+        rewrite ^/(.+)/\$ /\$1 permanent;
+    }
+
+    # PHP FPM configuration.
+    location ~ \.php(/|\$) {
+        fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_split_path_info ^(.+\.php)(/.*)\$;
+
+        include /etc/nginx/fastcgi_params;
+
+        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT \$realpath_root;
+
+        fastcgi_param LANG hr;
+
+        fastcgi_read_timeout 300;
+    }
+
+    location = /favicon.ico {
+        root \$static_path;
+        rewrite favicon.ico /assets/browser_icons/favicon.ico;
+        break;
+    }
+
+    location = /apple-touch-icon-precomposed.png {
+        root \$static_path;
+        rewrite apple-touch-icon-precomposed.png /assets/browser_icons/apple-touch-icon-precomposed.png;
+        break;
+    }
+
+    location = /apple-touch-icon.png {
+        root \$static_path;
+        rewrite apple-touch-icon.png /assets/browser_icons/apple-touch-icon.png;
+        break;
+    }
+
+    location = /robots.txt {
+        root \$static_path;
+        #rewrite robots.txt /robots.txt;
+        break;
+    }
+
+}
+END
+
 
 sudo touch /etc/nginx/conf.d/project_static.conf
 sudo tee -a /etc/nginx/conf.d/project_static.conf << END

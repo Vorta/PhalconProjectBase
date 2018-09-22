@@ -250,7 +250,7 @@ $di->setShared('translation', function () {
         ? $this->getLang()
         : $config->translations->defaultLang;
 
-    $path = $config->translations->directory ."/$lang.php";
+    $path = $config->translations->directory ."$lang.php";
 
     if (!file_exists($path)) {
         throw new TranslationNotFoundException($lang);

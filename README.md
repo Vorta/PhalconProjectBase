@@ -56,5 +56,22 @@ It consists of 3 main keys:
 
 It is not necessary to translate every route. Defaults will be used for all non-translated routes. The route definition is in `config/routes.php`.
 
+## Language hard-coding
+If you want a specific language to be used on a certain domain instead of language-defining URI, set a $_SERVER variable LANG to this language.
+
+#### Nginx:
+```
+    location ~ \.php(/|\$) {
+        ...
+        fastcgi_param LANG hr;
+        ...
+    }
+```
+
+#### Apache (.htaccess)
+```
+    SetEnvIf Host \.hr$ LANG=hr
+```
+
 ## Planned for the future:
 - CLI

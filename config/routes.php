@@ -2,7 +2,7 @@
 
 return [
     'homepage' => [
-        'route'     => '',
+        'route'     => '/',
         'resources' => [
             'controller'    => 'index',
             'action'        => 'index'
