@@ -3,13 +3,11 @@
 $loader = new Phalcon\Loader();
 
 $loader->registerNamespaces([
-    'Project\Core'               => PROJECT_ROOT .'/src/Core',
-    'Project\Core\Models'        => PROJECT_ROOT .'/src/Core/Models/',
-    'Project\Front'              => PROJECT_ROOT .'/src/Front',
-    'Project\Front\Controllers'  => PROJECT_ROOT .'/src/Front/Controllers/'
-]);
-
-$loader->register();
+    'Project\Core'  => PROJECT_ROOT .'/src/Core',
+    'Project\Front' => PROJECT_ROOT .'/src/Front',
+    'Project\CLI'   => PROJECT_ROOT .'/src/CLI',
+    'Project'       => PROJECT_ROOT .'/src',
+])->register();
 
 // Composer autoloader
 require_once PROJECT_ROOT . '/vendor/autoload.php';

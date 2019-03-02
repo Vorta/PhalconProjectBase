@@ -4,9 +4,9 @@ namespace Project\Core\Models;
 
 use Phalcon\Mvc\Model;
 use Phalcon\Validation;
+use Project\Core\Security\Role;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
-use Project\Core\Security\Role;
 
 /**
  * Class Group
@@ -50,7 +50,8 @@ class Group extends Model
     /**
      * @return array
      */
-    public function columnMap() {
+    public function columnMap(): array
+    {
         return [
             'id'    => 'id',
             'name'  => 'name',
@@ -122,9 +123,9 @@ class Group extends Model
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -134,8 +135,8 @@ class Group extends Model
      */
     public function addRole(string $role): void
     {
-        if (isset(Role::$role)) {
-            $this->roles[] = Role::$role;
+        if (isset(Role::ROLE_MAP[$role])) {
+            $this->roles[] = Role::ROLE_MAP[$role];
             $this->roles = array_unique($this->roles);
         }
     }

@@ -8,7 +8,7 @@ use Phalcon\Translate\Adapter\NativeArray;
 /**
  * Class ErrorController
  * @package Project\Front\Controllers
- * @property NativeArray t
+ * @property NativeArray $t
  */
 class ErrorController extends Controller
 {
@@ -32,10 +32,10 @@ class ErrorController extends Controller
      * Handles exceptions gracefully
      * @param string $errorMessage
      */
-    public function show503Action(?string $errorMessage = 'ERR_503')
+    public function show503Action(?string $errorMessage = null)
     {
         //echo $this->t->t($errorMessage);
-        echo $errorMessage;
+        echo $errorMessage ?? 'ERR_503';
     }
 
     /**

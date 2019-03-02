@@ -26,7 +26,8 @@ if (isset($_SERVER['LANG'])) {
     preg_match(
         "/^\/([a-z]{2})(\/|$)/",
         $router->getRewriteUri(),
-        $output);
+        $output
+    );
 
     $lang = $output[1] ?? null;
 

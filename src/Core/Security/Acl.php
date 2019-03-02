@@ -8,11 +8,10 @@ use Phalcon\Mvc\User\Component;
 /**
  * Class Acl
  * @package Project\Core\Security
- * @property Config aclResources
+ * @property Config $aclResources
  */
 class Acl extends Component
 {
-
     /**
      * Checks if a controller access is private
      *
@@ -57,5 +56,4 @@ class Acl extends Component
             ? true
             : in_array($roleRequired, $userRoles);
     }
-
 }

@@ -15,6 +15,9 @@ use Phalcon\Validation\Validator\PresenceOf;
  */
 class LoginForm extends Form
 {
+    /**
+     *
+     */
     public function initialize(): void
     {
         // Username

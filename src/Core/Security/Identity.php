@@ -33,6 +33,7 @@ class Identity implements \Serializable
      * @param int $userId
      * @param string $username
      * @param array $roles
+     * @throws \Exception
      */
     public function __construct(
         int $userId,

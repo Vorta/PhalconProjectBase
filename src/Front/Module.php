@@ -2,11 +2,15 @@
 
 namespace Project\Front;
 
+use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Mvc\View;
 
+/**
+ * Class Module
+ * @package Project\Front
+ */
 class Module implements ModuleDefinitionInterface
 {
 

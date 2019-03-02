@@ -2,14 +2,22 @@
 
 namespace Project\Front\Controllers;
 
-use Project\Core\Exception\AuthException;
+use Phalcon\Flash\Direct;
 use Project\Core\Models\User;
+use Phalcon\Mvc\ViewInterface;
 use Project\Front\Forms\LoginForm;
+use Phalcon\Http\RequestInterface;
+use Phalcon\Http\ResponseInterface;
 use Project\Front\Forms\RegisterForm;
+use Project\Core\Exception\AuthException;
 
 /**
  * Class AuthController - For registration and authentication
  * @package Project\Front\Controllers
+ * @property Direct $flash
+ * @property ViewInterface $view
+ * @property RequestInterface $request
+ * @property ResponseInterface $response
  */
 class AuthController extends ControllerBase
 {

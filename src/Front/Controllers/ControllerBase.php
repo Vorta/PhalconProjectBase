@@ -2,17 +2,17 @@
 
 namespace Project\Front\Controllers;
 
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\Dispatcher;
 use Project\Core\Security\Acl;
 use Project\Core\Security\Auth;
 use Project\Core\Security\Identity;
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\Dispatcher;
 
 /**
  * Class ControllerBase
  * @package Project\Front\Controllers
- * @property Auth auth
- * @property Acl acl
+ * @property Auth $auth
+ * @property Acl $acl
  */
 class ControllerBase extends Controller
 {

@@ -2,20 +2,29 @@
 
 namespace Project\Core\Plugin;
 
+use Phalcon\Config;
 use Phalcon\Dispatcher;
 use Phalcon\Events\Event;
-use Phalcon\Logger\Adapter\File as Logger;
-use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
 use Phalcon\Mvc\User\Plugin;
+use Phalcon\Logger\Adapter\File as Logger;
 use Project\Core\Exception\TranslationNotFoundException;
+use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
 
 /**
  * Class ExceptionPlugin - Used to handle exceptions thrown within dispatcher
  * @package Project\Core\Plugin
- * @property Logger logger
+ * @property Logger $logger
+ * @property Config $config
  */
 class ExceptionPlugin extends Plugin
 {
+    /**
+     * @param Event $event
+     * @param Dispatcher $dispatcher
+     * @param \Exception $exception
+     * @return bool
+     * @throws \Phalcon\Exception
+     */
     public function beforeException(Event $event, Dispatcher $dispatcher, \Exception $exception)
     {
         $this->logger->alert(
@@ -41,7 +50,6 @@ class ExceptionPlugin extends Plugin
                     case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
                     case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
                         $forward['action'] = 'show404';
-
                 }
                 break;
             default:

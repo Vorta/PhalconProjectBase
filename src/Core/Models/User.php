@@ -2,17 +2,17 @@
 
 namespace Project\Core\Models;
 
-use Phalcon\Mvc\Model;
 use Phalcon\Security;
+use Phalcon\Mvc\Model;
 use Phalcon\Validation;
+use Project\Core\Security\Role;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
-use Project\Core\Security\Role;
 
 /**
  * Class User
  * @package Project\Core\Models
- * @property Group group
+ * @property Group|bool $group
  */
 class User extends Model
 {
@@ -60,7 +60,8 @@ class User extends Model
     /**
      * @return array
      */
-    public function columnMap() {
+    public function columnMap(): array
+    {
         return [
             'id'        => 'id',
             'username'  => 'username',
@@ -140,9 +141,9 @@ class User extends Model
     }
 
     /**
-     * @param $email
+     * @param string $email
      */
-    public function setEmail($email): void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
@@ -156,9 +157,9 @@ class User extends Model
     }
 
     /**
-     * @return Group
+     * @return Group|bool
      */
-    public function getGroup(): Group
+    public function getGroup()
     {
         return $this->group;
     }
@@ -169,7 +170,7 @@ class User extends Model
      */
     public function getRoles(): array
     {
-        if ($this->group === FALSE) {
+        if (!$this->group instanceof Group) {
             return [Role::ROLE_USER];
         }
         return $this->group->getRoles();

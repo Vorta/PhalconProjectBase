@@ -19,6 +19,9 @@ use Phalcon\Validation\Validator\Email as EmailValidator;
  */
 class RegisterForm extends Form
 {
+    /**
+     *
+     */
     public function initialize(): void
     {
         // Username

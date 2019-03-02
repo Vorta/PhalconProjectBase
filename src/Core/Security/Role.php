@@ -8,14 +8,20 @@ namespace Project\Core\Security;
  */
 class Role
 {
-    public const ANONYMOUS          = 'ANONYMOUS';
-    public const ROLE_USER          = 'ROLE_USER';
-    public const ROLE_ADMIN         = 'ROLE_ADMIN';
+    public const ANONYMOUS  = 'ANONYMOUS';
+    public const ROLE_USER  = 'ROLE_USER';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+
+    public const ROLE_MAP = [
+        self::ANONYMOUS     => 'Anonymous',
+        self::ROLE_USER     => 'Default user',
+        self::ROLE_ADMIN    => 'Administrator'
+    ];
 
     /**
      * @return array
      */
-    static function getRoles(): array
+    public static function getRoles(): array
     {
         try {
             $reflection = new \ReflectionClass(__CLASS__);

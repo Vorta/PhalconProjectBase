@@ -11,6 +11,7 @@ The project base includes:
 - Ready Auth control with permission management
 - Multilingual support
 - Logger
+- Simple CLI
 
 ## Debug mode
 To use debug mode in your dev environment create a .debug file in project root:
@@ -169,9 +170,15 @@ This project is configured for the following DB details:
 ```
 MYSQL_DB_NAME="phalcon_project"
 MYSQL_DB_USER="phalcon_project_user"
-MYSQL_DB_PASS="Ruc=\$6&AneJ@WAze?aS6eNEprUF3#Tas"
+MYSQL_DB_PASS="Ruc=$6&AneJ@WAze?aS6eNEprUF3#Tas"
 ```
 Database schema is stored in /schemas/ folder.
+
+Recommended charset: `utf8mb4_unicode_520_ci`:
+
+```mysql
+CREATE SCHEMA `phalcon_project` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+```
 
 ## Running locally
 This base project has a few testing pages available. You can add the following to your hosts file:
@@ -219,6 +226,3 @@ If you want a specific language to be used on a certain domain instead of langua
 ```apacheconfig
     SetEnvIf Host \.hr$ LANG=hr
 ```
-
-## Planned for the future:
-- CLI
