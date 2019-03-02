@@ -1,11 +1,11 @@
 <?php
 
-use Phalcon\DI;
+use Phalcon\Di;
 use Phalcon\Mvc\Application;
 use Fabfuel\Prophiler\Profiler;
 use Fabfuel\Prophiler\Plugin\Manager\Phalcon as PluginManager;
 
-define('PROJECT_ROOT', dirname(__DIR__));
+define('PROJECT_ROOT', realpath(dirname(__DIR__)));
 define('DEBUG', file_exists(PROJECT_ROOT .'/.debug'));
 
 // Check if we're on HTTPS
@@ -30,7 +30,7 @@ try {
     }
 
     // Start dependency injector
-    $di = new DI();
+    $di = new Di();
 
     // Read the loader
     include PROJECT_ROOT .'/config/loader.php';
