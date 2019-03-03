@@ -42,7 +42,7 @@ class ExceptionPlugin extends Plugin
             case $exception instanceof TranslationNotFoundException:
                 $forward['action'] = 'show404';
                 $forward['params'] = [
-                    'lang' => $this->config->translations->defaultLang
+                    'lang' => $this->config->get('translations')->defaultLang
                 ];
                 break;
             case $exception instanceof DispatcherException:

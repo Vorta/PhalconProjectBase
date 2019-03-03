@@ -2,22 +2,33 @@
 
 namespace Project\Front\Controllers;
 
+use Phalcon\Config;
+use Phalcon\DiInterface;
 use Phalcon\Mvc\Controller;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Translate\Adapter\NativeArray;
 
 /**
  * Class ErrorController
  * @package Project\Front\Controllers
  * @property NativeArray $t
+ * @property DiInterface $di
+ * @property Config $config
+ * @property ResponseInterface $response
  */
 class ErrorController extends Controller
 {
+    /**
+     * @var NativeArray
+     */
+    protected $t;
+
     /**
      * Try to give error messages in user's language
      */
     public function initialize()
     {
-        $this->t = $this->di->getTranslator();
+        $this->t = $this->di->get('translator');
     }
 
     /**
@@ -43,6 +54,10 @@ class ErrorController extends Controller
      */
     public function languageUndefinedAction()
     {
-        return $this->response->redirect($this->config->translations->defaultLang, true, 301);
+        return $this->response->redirect(
+            $this->config->get('translations')->defaultLang,
+            true,
+            301
+        );
     }
 }

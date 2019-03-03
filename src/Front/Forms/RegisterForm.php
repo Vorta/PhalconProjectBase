@@ -2,6 +2,7 @@
 
 namespace Project\Front\Forms;
 
+use Phalcon\Security;
 use Phalcon\Forms\Form;
 use Phalcon\Forms\Element\Text;
 use Phalcon\Forms\Element\Email;
@@ -16,6 +17,7 @@ use Phalcon\Validation\Validator\Email as EmailValidator;
 /**
  * Class RegisterForm
  * @package Project\Front\Forms
+ * @property Security $security
  */
 class RegisterForm extends Form
 {

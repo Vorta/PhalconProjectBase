@@ -4,11 +4,13 @@ namespace Project\Core\Security;
 
 use Project\Core\Models\User;
 use Phalcon\Mvc\User\Component;
+use Phalcon\Session\AdapterInterface;
 use Project\Core\Exception\AuthException;
 
 /**
  * Class Auth
  * @package Project\Core\Security
+ * @property AdapterInterface $session
  */
 class Auth extends Component
 {
@@ -21,12 +23,12 @@ class Auth extends Component
      * @param string $username
      * @param string $plainPassword
      * @throws AuthException
+     * @throws \Exception
      */
     public function check(string $username, string $plainPassword): void
     {
-        /** @var $user User */
         $user = User::findFirstByUsername($username);
-        if ($user === false) {
+        if (!$user instanceof User) {
             $this->authThrottling();
             throw new AuthException('Wrong email/password combination');
         }
@@ -71,19 +73,19 @@ class Auth extends Component
     }
 
     /**
-     * @return User
+     * @return User|null
      * @throws AuthException
      */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         $identity = $this->session->get(self::IDENTITY_KEY);
-        if (is_null($identity)) {
+        if (!$identity instanceof Identity) {
             return null;
         }
 
         $user = User::findFirstById($identity->getUserId());
 
-        if ($user == false) {
+        if (!$user instanceof User) {
             $this->remove();
             throw new AuthException('User account deleted');
         }

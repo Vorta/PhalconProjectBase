@@ -13,6 +13,8 @@ use Phalcon\Validation\Validator\PresenceOf;
  * Class User
  * @package Project\Core\Models
  * @property Group|bool $group
+ * @method static User|bool findFirstById(int $id)
+ * @method static User|bool findFirstByUsername(string $username)
  */
 class User extends Model
 {

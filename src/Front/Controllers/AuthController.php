@@ -52,7 +52,7 @@ class AuthController extends ControllerBase
             }
         }
 
-        $this->view->form = $form;
+        $this->view->setVar('form', $form);
     }
 
     /**
@@ -84,7 +84,7 @@ class AuthController extends ControllerBase
             $this->flash->error($authException->getMessage());
         }
 
-        $this->view->form = $form;
+        $this->view->setVar('form', $form);
     }
 
     /**

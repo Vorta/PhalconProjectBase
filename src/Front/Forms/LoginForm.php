@@ -2,6 +2,7 @@
 
 namespace Project\Front\Forms;
 
+use Phalcon\Security;
 use Phalcon\Forms\Form;
 use Phalcon\Forms\Element\Text;
 use Phalcon\Forms\Element\Hidden;
@@ -12,6 +13,7 @@ use Phalcon\Validation\Validator\PresenceOf;
 /**
  * Class LoginForm
  * @package Project\Front\Forms
+ * @property Security $security
  */
 class LoginForm extends Form
 {

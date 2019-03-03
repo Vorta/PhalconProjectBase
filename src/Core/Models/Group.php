@@ -27,7 +27,12 @@ class Group extends Model
     /**
      * @var array
      */
-    private $roles;
+    private $rolesArr;
+
+    /**
+     * @var string
+     */
+    private $rolesStr;
 
     /**
      * Model initialization
@@ -55,7 +60,7 @@ class Group extends Model
         return [
             'id'    => 'id',
             'name'  => 'name',
-            'roles' => 'roles'
+            'roles' => 'rolesStr'
         ];
     }
 
@@ -87,7 +92,7 @@ class Group extends Model
      */
     public function beforeSave(): void
     {
-        $this->roles = join(',', $this->roles);
+        $this->rolesStr = join(',', $this->rolesArr);
     }
 
     /**
@@ -95,7 +100,7 @@ class Group extends Model
      */
     public function afterFetch(): void
     {
-        $this->roles = explode(',', $this->roles);
+        $this->rolesArr = explode(',', $this->rolesStr);
     }
 
     /**
@@ -103,7 +108,7 @@ class Group extends Model
      */
     public function afterSave(): void
     {
-        $this->roles = explode(',', $this->roles);
+        $this->rolesArr = explode(',', $this->rolesStr);
     }
 
     /**
@@ -136,8 +141,8 @@ class Group extends Model
     public function addRole(string $role): void
     {
         if (isset(Role::ROLE_MAP[$role])) {
-            $this->roles[] = Role::ROLE_MAP[$role];
-            $this->roles = array_unique($this->roles);
+            $this->rolesArr[] = Role::ROLE_MAP[$role];
+            $this->rolesArr = array_unique($this->rolesArr);
         }
     }
 
@@ -146,8 +151,8 @@ class Group extends Model
      */
     public function removeRole(string $role): void
     {
-        if ($key = array_search($role, $this->roles) !== false) {
-            unset($this->roles[$key]);
+        if ($key = array_search($role, $this->rolesArr) !== false) {
+            unset($this->rolesArr[$key]);
         }
     }
 
@@ -156,9 +161,9 @@ class Group extends Model
      */
     public function getRoles(): array
     {
-        if (empty($this->roles)) {
+        if (empty($this->rolesArr)) {
             return [Role::ROLE_USER];
         }
-        return $this->roles;
+        return $this->rolesArr;
     }
 }

@@ -2,20 +2,34 @@
 
 namespace Project\Front\Controllers;
 
+use Phalcon\DiInterface;
+use Phalcon\FlashInterface;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\ViewInterface;
 use Project\Core\Security\Acl;
 use Project\Core\Security\Auth;
+use Phalcon\Http\ResponseInterface;
 use Project\Core\Security\Identity;
+use Phalcon\Translate\Adapter\NativeArray;
 
 /**
  * Class ControllerBase
  * @package Project\Front\Controllers
- * @property Auth $auth
  * @property Acl $acl
+ * @property Auth $auth
+ * @property DiInterface $di
+ * @property ViewInterface $view
+ * @property FlashInterface $flash
+ * @property ResponseInterface $response
  */
 class ControllerBase extends Controller
 {
+    /**
+     * @var NativeArray
+     */
+    protected $t;
+
     /**
      * @param Dispatcher $dispatcher
      * @return bool
@@ -25,8 +39,8 @@ class ControllerBase extends Controller
         $controllerName = $dispatcher->getControllerName();
         $actionName = $dispatcher->getActionName();
 
-        $this->t = $this->di->getTranslator();
-        $this->view->t = $this->t;
+        $this->t = $this->di->get('translator');
+        $this->view->setVar('t', $this->t);
 
         if ($this->acl->isPrivate($controllerName, $actionName)) {
             /** @var Identity $identity */
