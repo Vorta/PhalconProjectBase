@@ -3,32 +3,23 @@
 namespace Project\Front\Controllers;
 
 use Phalcon\Config;
-use Phalcon\DiInterface;
 use Phalcon\Mvc\Controller;
 use Phalcon\Http\ResponseInterface;
-use Phalcon\Translate\Adapter\NativeArray;
 
 /**
  * Class ErrorController
  * @package Project\Front\Controllers
- * @property NativeArray $t
- * @property DiInterface $di
  * @property Config $config
  * @property ResponseInterface $response
  */
 class ErrorController extends Controller
 {
     /**
-     * @var NativeArray
+     * Handles 400 pages gracefully
      */
-    protected $t;
-
-    /**
-     * Try to give error messages in user's language
-     */
-    public function initialize()
+    public function show400Action()
     {
-        $this->t = $this->di->get('translator');
+        echo translate('ERR_400');
     }
 
     /**
@@ -36,17 +27,23 @@ class ErrorController extends Controller
      */
     public function show404Action()
     {
-        echo $this->t->t('ERR_404');
+        echo translate('ERR_404');
     }
 
     /**
      * Handles exceptions gracefully
-     * @param string $errorMessage
      */
-    public function show503Action(?string $errorMessage = null)
+    public function show500Action()
     {
-        //echo $this->t->t($errorMessage);
-        echo $errorMessage ?? 'ERR_503';
+        echo translate('ERR_500');
+    }
+
+    /**
+     * Handles exceptions gracefully
+     */
+    public function show503Action()
+    {
+        echo translate('ERR_503');
     }
 
     /**

@@ -1,16 +1,7 @@
-{{ flash.output() }}
+{% extends "_include/template/default.volt" %}
 
-<h1>{{ t._('LBL_LOGIN') }}</h1>
-
-<form action="{{ url.get(['for': 'login']) }}" method="post">
-
-    {% for element in form %}
-
-        {{ element.getLabel() }}
-        {{ element.render() }}
-        <br><br>
-
-    {% endfor %}
-
-    <button type="submit">{{ t._('LBL_LOGIN') }}!</button>
-</form>
+{% block content %}
+    <form action="{{ url.get(['for': 'login']) }}" method="post" class="border border-light p-4">
+        {% include '_include/component/form.volt' %}
+    </form>
+{% endblock %}

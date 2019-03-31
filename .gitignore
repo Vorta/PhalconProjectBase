@@ -1,6 +1,6 @@
 .DS_Store
 .nano_history
-.debug
+.env
 
 *.log
 *.sublime-project

@@ -8,14 +8,16 @@ namespace Project\Core\Security;
  */
 class Role
 {
-    public const ANONYMOUS  = 'ANONYMOUS';
-    public const ROLE_USER  = 'ROLE_USER';
-    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ANONYMOUS      = 'ANONYMOUS';
+    public const AUTHENTICATED  = 'AUTHENTICATED';
+    public const USER           = 'USER';
+    public const ADMIN          = 'ADMIN';
 
     public const ROLE_MAP = [
         self::ANONYMOUS     => 'Anonymous',
-        self::ROLE_USER     => 'Default user',
-        self::ROLE_ADMIN    => 'Administrator'
+        self::AUTHENTICATED => 'Authenticated',
+        self::USER          => 'Default user',
+        self::ADMIN         => 'Administrator'
     ];
 
     /**

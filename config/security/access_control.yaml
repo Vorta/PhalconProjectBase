@@ -1,0 +1,11 @@
+# Access Control List definition.
+index:
+    index:     ANONYMOUS
+
+auth:
+    register:  ANONYMOUS
+    login:     ANONYMOUS
+    logout:    USER
+
+error:
+    '*':       ANONYMOUS

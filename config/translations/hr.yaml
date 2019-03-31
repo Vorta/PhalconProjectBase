@@ -1,0 +1,43 @@
+    lang: 'hr'
+    routes:
+#       routeName:  '/translated-route'
+        register:   '/registracija'
+        login:      '/prijava'
+        logout:     '/odjava'
+        user:       '/korisnik'
+        admin:      '/administrator'
+    content:
+        LBL_REGISTRATION:               "Kreirajte račun"
+        LBL_REGISTRATION_BTN:           "Pošalji"
+        LBL_LOGIN:                      "Prijava"
+        LBL_LOGIN_BTN:                  "Prijavite se"
+        LBL_EMAIL:                      "E-mail adresa"
+        LBL_LOGOUT:                     "Odjava"
+        LBL_USERNAME:                   "Korisničko ime"
+        LBL_PASSWORD:                   "Lozinka"
+        LBL_PASSWORD_CONFIRM:           "Potvrda lozinke"
+
+        MSG_HOME_PAGE:                  "Početna stranica"
+        MSG_HELLO_WORLD:                "Bok svijete!"
+        MSG_USER_CREATED:               "Korisnički račun kreiran"
+        MSG_USER_DELETED:               "Korisnički račun obrisan"
+        MSG_LOG_IN_SUCCESS:             "Prijava uspješna"
+        MSG_LOG_OUT_SUCCESS:            "Odjava uspješna"
+
+        ERR_404:                        "Stranica nije pronađena."
+        ERR_503:                        "Usluga nedostupna!"
+        ERR_LOGIN_FAILED:               "Netočna kombinacija korisničkog imena i lozinke"
+        ERR_USERNAME_REQUIRED:          "Korisničko ime je obavezno!"
+        ERR_USERNAME_USED:              "Odabrano korisničko ime je već u upotrebi!"
+        ERR_PASSWORD_REQUIRED:          "Lozinka je obavezna!"
+        ERR_PASSWORD_LENGTH:            "Lozinka je prekratka. Molim upotrijebite %length% ili više znakova."
+        ERR_PASSWORD_CONFIRM_MATCH:     "Lozinka i potvrda lozinke moraju biti iste!"
+        ERR_PASSWORD_CONFIRM_REQUIRED:  "Potvrda lozinke je obavezna!"
+        ERR_EMAIL_REQUIRED:             "E-mail adresa je obavezna!"
+        ERR_EMAIL_INVALID:              "E-mail adresa je neispravna!"
+        ERR_EMAIL_USED:                 "Ova e-mail adresa je već upotrijebljena."
+        ERR_CSRF_FAILED:                "Neuspjela CSRF provjera!"
+        ERR_GROUP_NAME_USED:            "Korisnička grupa s ovim imenom već postoji"
+        ERR_GROUP_NAME_REQUIRED:        "Ime grupe je obavezno"
+        ERR_GROUP_ROLE_REQUIRED:        "Bar jedna uloga u grupi je obavezna"
+        ERR_GROUP_HAS_USES:             "Grupu nije moguće obrisati dok ima korisnike."

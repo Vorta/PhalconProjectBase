@@ -1,16 +1,18 @@
-<h1>{{ t._('MSG_HOME_PAGE') }}</h1>
+{% extends "_include/template/default.volt" %}
 
-{{ flash.output() }}
-<br>
+{% block content %}
 
-{% if auth.getIdentity() is not null %}
-    {{ auth.getIdentity().getUsername() }}
-    <br>
-    <a href="{{ url.get(['for': 'logout']) }}">{{ t._('LBL_LOGOUT') }}</a>
-{% else %}
-    <a href="{{ url.get(['for': 'register']) }}">{{ t._('LBL_REGISTER') }}</a>
-    <br>
-    <a href="{{ url.get(['for': 'login']) }}">{{ t._('LBL_LOGIN') }}</a>
-{% endif %}
-<br>
+    <h1>{{ t('MSG_HOME_PAGE') }}</h1>
 
+    <div class="row">
+        <div class="col-6">
+            {% if auth.getIdentity() is not null %}
+                <a href="{{ url.get(['for': 'logout']) }}">{{ t('LBL_LOGOUT') }}</a>
+            {% else %}
+                <a href="{{ url.get(['for': 'register']) }}">{{ t('LBL_REGISTRATION') }}</a>
+                <br>
+                <a href="{{ url.get(['for': 'login']) }}">{{ t('LBL_LOGIN') }}</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

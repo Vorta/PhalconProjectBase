@@ -13,8 +13,7 @@ use Phalcon\Mvc\User\Component;
 class Acl extends Component
 {
     /**
-     * Checks if a controller access is private
-     *
+     * Checks if a resource is considered private
      * @param string $controller
      * @param string $action
      * @return boolean
@@ -32,8 +31,7 @@ class Acl extends Component
     }
 
     /**
-     * Checks if the current profile is allowed to access a resource
-     *
+     * Checks if the current profile is allowed to access a private resource
      * @param array $userRoles
      * @param string $controller
      * @param string $action
@@ -41,19 +39,23 @@ class Acl extends Component
      */
     public function isAllowed(array $userRoles, string $controller, string $action): bool
     {
-        if (in_array(Role::ROLE_ADMIN, $userRoles)) {
+        // Admin can access everything
+        if (in_array(Role::ADMIN, $userRoles)) {
             return true;
         }
 
+        /** @var mixed $roleRequired */
         $roleRequired = $this->aclResources->path("$controller.$action")
                         ?? $this->aclResources->path("$controller.*");
 
-        if (is_null($roleRequired)) {
-            return false;
+        // We expect to get a single string role required and match it against user's roles
+        if (is_string($roleRequired)) {
+            return in_array($roleRequired, $userRoles);
         }
 
-        return $roleRequired === Role::ANONYMOUS
-            ? true
-            : in_array($roleRequired, $userRoles);
+        // For anything else, there might be a config error
+        throw new \LogicException(
+            "Route role requirement invalid. Please check access_control.yaml"
+        );
     }
 }

@@ -2,11 +2,23 @@
 
 namespace Project\Front\Controllers;
 
+use Phalcon\FlashInterface;
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\ViewInterface;
+use Project\Core\Security\Auth;
+use Phalcon\Http\RequestInterface;
+use Phalcon\Http\ResponseInterface;
+
 /**
  * Class IndexController
  * @package Project\Front\Controllers
+ * @property Auth $auth
+ * @property ViewInterface $view
+ * @property FlashInterface $flash
+ * @property RequestInterface $request
+ * @property ResponseInterface $response
  */
-class IndexController extends ControllerBase
+class IndexController extends Controller
 {
     /**
      * Default homepage
@@ -14,22 +26,5 @@ class IndexController extends ControllerBase
     public function indexAction()
     {
         // This should load index.volt
-        echo "You shouldn't see this text";
-    }
-
-    /**
-     * Only ROLE_USER or higher may access
-     */
-    public function userOnlyAction()
-    {
-        echo "You are at least ROLE_USER";
-    }
-
-    /**
-     * Only ROLE_ADMIN or higher may access
-     */
-    public function adminOnlyAction()
-    {
-        echo "You must be ROLE_ADMIN";
     }
 }

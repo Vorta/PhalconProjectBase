@@ -10,13 +10,12 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
 /**
  * Class Module
  * @package Project\Front
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class Module implements ModuleDefinitionInterface
 {
-
     /**
      * Registers an autoloader related to the module
-     *
      * @param DiInterface $di
      */
     public function registerAutoloaders(DiInterface $di = null)
@@ -26,7 +25,6 @@ class Module implements ModuleDefinitionInterface
 
     /**
      * Registers services related to the module
-     *
      * @param DiInterface $di
      */
     public function registerServices(DiInterface $di)

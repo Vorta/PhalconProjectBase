@@ -5,12 +5,15 @@ namespace Project\Core\Models;
 use Phalcon\Mvc\Model;
 use Phalcon\Validation;
 use Project\Core\Security\Role;
+use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
  * Class Group
  * @package Project\Core\Models
+ * @method static Group|bool findFirstById(int $id)
+ * @property Simple $users
  */
 class Group extends Model
 {
@@ -46,7 +49,7 @@ class Group extends Model
             [
                 'alias' => 'users',
                 'foreignKey' => [
-                    'message' => 'Group cannot be deleted while it has users.'
+                    'message' => translate('ERR_GROUP_HAS_USES')
                 ]
             ]
         );
@@ -73,15 +76,15 @@ class Group extends Model
         $validator = new Validation();
 
         $validator->add('name', new Uniqueness([
-            "message" => "A group with this name already exists"
+            "message" => translate('ERR_GROUP_NAME_USED')
         ]));
 
         $validator->add('name', new PresenceOf([
-            "message" => "Group name is mandatory"
+            "message" => translate('ERR_GROUP_NAME_REQUIRED')
         ]));
 
         $validator->add('roles', new PresenceOf([
-            "message" => "At least one group role is required"
+            "message" => translate('ERR_GROUP_ROLE_REQUIRED')
         ]));
 
         return $this->validate($validator);
@@ -162,7 +165,7 @@ class Group extends Model
     public function getRoles(): array
     {
         if (empty($this->rolesArr)) {
-            return [Role::ROLE_USER];
+            return [Role::USER];
         }
         return $this->rolesArr;
     }

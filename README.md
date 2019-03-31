@@ -1,23 +1,13 @@
 # Phalcon Base Project
 
-This is a base project to be used when starting other projects based on [PhalconPHP](https://phalconphp.com/).
+This is a base project to be used when starting other projects based on [Phalcon Framework](https://phalconphp.com/).
 
 The project base includes:
 - Standard MVC structure
-- Prophiler
 - Redis session storage
-- Debug mode control
-- Complete Vagrant bootstrap
 - Ready Auth control with permission management
 - Multilingual support
 - Logger
-- Simple CLI
-
-## Debug mode
-To use debug mode in your dev environment create a .debug file in project root:
-```
-touch .debug
-```
 
 ## Requirements
 The project is tested with and requires:
@@ -43,26 +33,9 @@ sudo ln -s /etc/php/7.3/mods-available/ds.ini /etc/php/7.3/fpm/conf.d/20-ds.ini
 sudo ln -s /etc/php/7.3/mods-available/ds.ini /etc/php/7.3/cli/conf.d/20-ds.ini
 ```
 
-#### PHP PSR
-```bash
-git clone https://github.com/jbboehr/php-psr.git
-cd php-psr/
-phpize
-./configure
-make
-sudo make install
-
-sudo tee -a /etc/php/7.3/mods-available/psr.ini << END
-extension=psr.so
-END
-
-sudo ln -s /etc/php/7.3/mods-available/psr.ini /etc/php/7.3/fpm/conf.d/20-psr.ini
-sudo ln -s /etc/php/7.3/mods-available/psr.ini /etc/php/7.3/cli/conf.d/20-psr.ini
-```
-
 #### PhalconPHP v3.4
 ```bash
-git clone --branch v3.4.x https://github.com/phalcon/cphalcon.git
+git clone --branch v3.4.3 https://github.com/phalcon/cphalcon.git
 cd cphalcon/build
 sudo ./install
 
@@ -81,7 +54,6 @@ Don't forget to change the `$root_path` and `$static_path`.
 ```
 # phalcon-project.conf
 server {
-
     listen 80;
     server_name www.phalcon-project.*;
 
@@ -104,7 +76,6 @@ server {
         rewrite ^/(.+)/$ /$1 permanent;
     }
 
-
     # PHP FPM configuration.
     location ~ /index\.php(/|$) {
         fastcgi_pass unix:/run/php/php7.3-fpm.sock;
@@ -119,36 +90,31 @@ server {
 
     location = /favicon.ico {
         root $static_path;
-        rewrite favicon.ico /assets/browser_icons/favicon.ico;
+        rewrite favicon.ico /static/browser/favicon.ico;
         break;
     }
 
     location = /apple-touch-icon-precomposed.png {
         root $static_path;
-        rewrite apple-touch-icon-precomposed.png /assets/browser_icons/apple-touch-icon-precomposed.png;
+        rewrite apple-touch-icon-precomposed.png /static/browser/apple-touch-icon-precomposed.png;
         break;
     }
 
     location = /apple-touch-icon.png {
         root $static_path;
-        rewrite apple-touch-icon.png /assets/browser_icons/apple-touch-icon.png;
+        rewrite apple-touch-icon.png /static/browser/apple-touch-icon.png;
         break;
     }
 
     location = /robots.txt {
         root $static_path;
-        #rewrite robots.txt /robots.txt;
         break;
     }
 }
-```
 
-```
-# phalcon-project-static.conf
 server {
-
     listen          80;
-    server_name     static.phalcon-project.test;
+    server_name     static.phalcon-project.*;
 
     root            /path/to/project/static;
 
@@ -161,10 +127,9 @@ server {
 
     add_header 'Access-Control-Allow-Origin' '*';
     add_header 'Access-Control-Allow-Methods' 'GET';
-
 }
-
 ```
+
 ## Database
 This project is configured for the following DB details:
 ```
@@ -191,14 +156,12 @@ http://www.phalcon-project.test/en
 http://www.phalcon-project.test/en/register
 http://www.phalcon-project.test/en/login
 http://www.phalcon-project.test/en/logout
-http://www.phalcon-project.test/en/user - Accessible only with ROLE_USER or ROLE_ADMIN
-http://www.phalcon-project.test/en/admin - Accessible only with ROLE_ADMIN
 ```
 
 ## Routing and translations
 This project base is intended for multilingual web sites with translation system integrated on the route level.
 This allows the routes themselves to be translated.
-Translation files are stored in `config/translations/{lang}.php` as arrays.
+Translation files are stored in `config/translations/{lang}.yaml`.
 The translation file is loaded and available through the DI on the startup.
 It consists of 3 main keys:
 - Lang
@@ -208,7 +171,7 @@ It consists of 3 main keys:
 - Content
   - Contains the content translations and is loaded into the Phalcon's translation service on the first use.
 
-It is not necessary to translate every route. Defaults will be used for all non-translated routes. The route definition is in `config/routes.php`.
+It is not necessary to translate every route. Defaults will be used for all non-translated routes. The route definition is in `config/routes.yaml`.
 
 ### Language hard-coding
 If you want a specific language to be used on a certain domain instead of language-defining URI, set a $_SERVER variable LANG to this language.

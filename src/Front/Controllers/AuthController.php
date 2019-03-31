@@ -2,9 +2,12 @@
 
 namespace Project\Front\Controllers;
 
-use Phalcon\Flash\Direct;
+use Phalcon\FlashInterface;
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\UrlInterface;
 use Project\Core\Models\User;
 use Phalcon\Mvc\ViewInterface;
+use Project\Core\Security\Auth;
 use Project\Front\Forms\LoginForm;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\ResponseInterface;
@@ -14,12 +17,15 @@ use Project\Core\Exception\AuthException;
 /**
  * Class AuthController - For registration and authentication
  * @package Project\Front\Controllers
- * @property Direct $flash
+ * @property Auth $auth
+ * @property UrlInterface $url
  * @property ViewInterface $view
+ * @property FlashInterface $flash
  * @property RequestInterface $request
  * @property ResponseInterface $response
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class AuthController extends ControllerBase
+class AuthController extends Controller
 {
     /**
      * User registration
@@ -37,18 +43,18 @@ class AuthController extends ControllerBase
                 );
 
                 if ($user->create()) {
-                    $this->flash->success("User created");
-                    $this->response->redirect('/');
+                    $this->flash->success(
+                        translate('MSG_USER_CREATED')
+                    );
+                    $this->response->redirect(
+                        $this->url->get(['for' => 'homepage'])
+                    );
                     return;
                 }
 
                 foreach ($user->getMessages() as $message) {
                     $this->flash->error($message);
                 }
-            }
-
-            foreach ($form->getMessages() as $message) {
-                $this->flash->error($message);
             }
         }
 
@@ -57,6 +63,7 @@ class AuthController extends ControllerBase
 
     /**
      * User login
+     * @throws \Exception
      */
     public function loginAction(): void
     {
@@ -70,14 +77,14 @@ class AuthController extends ControllerBase
                         $this->request->getPost('password')
                     );
 
-                    $this->flash->success("Logged in successfully!");
+                    $this->flash->success(
+                        translate('MSG_LOG_IN_SUCCESS')
+                    );
 
-                    $this->response->redirect('/');
+                    $this->response->redirect(
+                        $this->url->get(['for' => 'homepage'])
+                    );
                     return;
-                }
-
-                foreach ($form->getMessages() as $message) {
-                    $this->flash->error($message);
                 }
             }
         } catch (AuthException $authException) {
@@ -93,8 +100,12 @@ class AuthController extends ControllerBase
     public function logoutAction(): void
     {
         $this->auth->remove();
-        $this->flash->success("Logged out!");
-        $this->response->redirect('/');
+        $this->flash->success(
+            translate('MSG_LOG_OUT_SUCCESS')
+        );
+        $this->response->redirect(
+            $this->url->get(['for' => 'homepage'])
+        );
         return;
     }
 }

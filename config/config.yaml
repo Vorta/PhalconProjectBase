@@ -1,0 +1,28 @@
+database:
+    adapter:    'Mysql'
+    host:       'localhost'
+    dbname:     'phalcon_project'
+    username:   'phalcon_project_user'
+    password:   'Ruc=$6&AneJ@WAze?aS6eNEprUF3#Tas'
+    charset:    'utf8mb4'
+
+redis:
+    uniqueId:   'phalcon_project'
+    host:       'localhost'
+    port:       6379
+    persistent: false
+    lifetime:   3600
+    prefix:     'project_'
+
+application:
+    cryptSalt:  'm&YSF7!XbCpuZ@cr!J?hfXK=#$up?d?7B#ukjCj^$QqYkGzrbV#qy@x!gFA*?9T*'
+    cacheDir:   'var/'
+
+logger:
+    filename:   'app.log'
+    format:     '[%date%][%type%]: %message%'
+    date:       'Y-m-d H:i:s'
+    logLevel:   !php/const Phalcon\Logger::DEBUG
+
+translations:
+    defaultLang: 'en'

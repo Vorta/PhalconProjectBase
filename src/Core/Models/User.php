@@ -14,7 +14,9 @@ use Phalcon\Validation\Validator\PresenceOf;
  * @package Project\Core\Models
  * @property Group|bool $group
  * @method static User|bool findFirstById(int $id)
+ * @method static User|bool findFirstByEmail(string $email)
  * @method static User|bool findFirstByUsername(string $username)
+ * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class User extends Model
 {
@@ -82,23 +84,23 @@ class User extends Model
         $validator = new Validation();
 
         $validator->add('email', new Uniqueness([
-            "message" => "This email is already in use"
+            "message" => translate('ERR_EMAIL_USED')
         ]));
 
         $validator->add('email', new PresenceOf([
-            "message" => "Email is mandatory"
+            "message" => translate('ERR_EMAIL_REQUIRED')
         ]));
 
         $validator->add('username', new Uniqueness([
-            "message" => "This username is already in use"
+            "message" => translate('ERR_USERNAME_USED')
         ]));
 
         $validator->add('username', new PresenceOf([
-            "message" => "Username is mandatory"
+            "message" => translate('ERR_USERNAME_REQUIRED')
         ]));
 
         $validator->add('password', new PresenceOf([
-            "message" => "Password is mandatory"
+            "message" => translate('ERR_PASSWORD_REQUIRED')
         ]));
 
         return $this->validate($validator);
@@ -173,7 +175,7 @@ class User extends Model
     public function getRoles(): array
     {
         if (!$this->group instanceof Group) {
-            return [Role::ROLE_USER];
+            return [Role::USER];
         }
         return $this->group->getRoles();
     }
@@ -189,8 +191,8 @@ class User extends Model
         string $username,
         string $email,
         string $password
-    ): User {
-        $user = new User([
+    ): self {
+        $user = new self([
             'username'  => $username,
             'email'     => $email
         ]);

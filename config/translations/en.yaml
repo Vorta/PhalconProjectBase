@@ -1,0 +1,43 @@
+    lang: 'en'
+    routes: ~
+#        routeName:  '/translated-route'
+#        register:   ''
+#        login:      ''
+#        logout:     ''
+#        user:       ''
+#        admin:      ''
+    content:
+        LBL_REGISTRATION:               "Create an account"
+        LBL_REGISTRATION_BTN:           "Submit"
+        LBL_LOGIN:                      "Login"
+        LBL_LOGIN_BTN:                  "Log in"
+        LBL_EMAIL:                      "E-mail"
+        LBL_LOGOUT:                     "Logout"
+        LBL_USERNAME:                   "Username"
+        LBL_PASSWORD:                   "Password"
+        LBL_PASSWORD_CONFIRM:           "Confirm Password"
+
+        MSG_HOME_PAGE:                  "Home page"
+        MSG_HELLO_WORLD:                "Hello world!"
+        MSG_USER_CREATED:               "User created"
+        MSG_USER_DELETED:               "User account deleted"
+        MSG_LOG_IN_SUCCESS:             "Logged in successfully!"
+        MSG_LOG_OUT_SUCCESS:            "Logged out!"
+
+        ERR_404:                        "Page not found."
+        ERR_503:                        "Service unavailable."
+        ERR_LOGIN_FAILED:               "Wrong username/password combination"
+        ERR_USERNAME_REQUIRED:          "Username is required!"
+        ERR_USERNAME_USED:              "This username is already in use!"
+        ERR_PASSWORD_REQUIRED:          "The password is required!"
+        ERR_PASSWORD_LENGTH:            "Password is too short. Please use %length% or more characters."
+        ERR_PASSWORD_CONFIRM_MATCH:     "Password and confirmation do not match!"
+        ERR_PASSWORD_CONFIRM_REQUIRED:  "The confirmation password is required!"
+        ERR_EMAIL_REQUIRED:             "E-mail is required!"
+        ERR_EMAIL_INVALID:              "The e-mail is not valid!"
+        ERR_EMAIL_USED:                 "This email is already in use"
+        ERR_CSRF_FAILED:                "CSRF validation failed!"
+        ERR_GROUP_NAME_USED:            "A group with this name already exists"
+        ERR_GROUP_NAME_REQUIRED:        "Group name is mandatory"
+        ERR_GROUP_ROLE_REQUIRED:        "At least one group role is required"
+        ERR_GROUP_HAS_USES:             "Group cannot be deleted while it has users."

@@ -26,4 +26,4 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_unicode_520_ci;
 
-INSERT INTO `phalcon_project`.`group` (`name`, `roles`) VALUES ('Administrators', 'ROLE_ADMIN');
+INSERT INTO `phalcon_project`.`group` (`name`, `roles`) VALUES ('Administrators', 'ADMIN');

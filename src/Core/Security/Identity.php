@@ -2,6 +2,8 @@
 
 namespace Project\Core\Security;
 
+use Project\Core\Models\User;
+
 /**
  * Class Identity, stored in session if user is authenticated
  * @package Project\Core\Security
@@ -48,6 +50,20 @@ class Identity implements \Serializable
     }
 
     /**
+     * @param User $user
+     * @return Identity
+     * @throws \Exception
+     */
+    public static function fromUser(User $user): self
+    {
+        return new self(
+            $user->getId(),
+            $user->getUsername(),
+            $user->getRoles()
+        );
+    }
+
+    /**
      * @return int
      */
     public function getUserId(): int
@@ -73,11 +89,9 @@ class Identity implements \Serializable
 
     /**
      * String representation of object
-     * @link https://php.net/manual/en/serializable.serialize.php
      * @return string the string representation of the object or null
-     * @since 5.1.0
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([
             $this->userId,
@@ -89,20 +103,16 @@ class Identity implements \Serializable
 
     /**
      * Constructs the object
-     * @link https://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
+     * @param string $serialized The string representation of the object.
      * @return void
-     * @since 5.1.0
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list(
             $this->userId,
             $this->username,
             $this->roles,
             $this->createdAt
-            ) = unserialize($serialized);
+        ) = unserialize($serialized);
     }
 }

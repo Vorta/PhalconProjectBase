@@ -1,46 +1,38 @@
 <?php
 
-namespace Project\Front\Controllers;
+namespace Project\Core\Plugin;
 
-use Phalcon\DiInterface;
+use Phalcon\Events\Event;
 use Phalcon\FlashInterface;
-use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\ViewInterface;
+use Phalcon\Mvc\User\Plugin;
 use Project\Core\Security\Acl;
 use Project\Core\Security\Auth;
 use Phalcon\Http\ResponseInterface;
 use Project\Core\Security\Identity;
-use Phalcon\Translate\Adapter\NativeArray;
 
 /**
- * Class ControllerBase
- * @package Project\Front\Controllers
+ * Class SecurityPlugin
+ * @package Project\Core\Plugin
  * @property Acl $acl
  * @property Auth $auth
- * @property DiInterface $di
- * @property ViewInterface $view
  * @property FlashInterface $flash
  * @property ResponseInterface $response
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
-class ControllerBase extends Controller
+class SecurityPlugin extends Plugin
 {
     /**
-     * @var NativeArray
-     */
-    protected $t;
-
-    /**
+     * @param Event $event
      * @param Dispatcher $dispatcher
      * @return bool
      */
-    public function beforeExecuteRoute(Dispatcher $dispatcher): bool
-    {
+    public function beforeExecuteRoute(
+        Event $event,
+        Dispatcher $dispatcher
+    ): bool {
         $controllerName = $dispatcher->getControllerName();
         $actionName = $dispatcher->getActionName();
-
-        $this->t = $this->di->get('translator');
-        $this->view->setVar('t', $this->t);
 
         if ($this->acl->isPrivate($controllerName, $actionName)) {
             /** @var Identity $identity */
@@ -49,14 +41,14 @@ class ControllerBase extends Controller
             if (!$identity instanceof Identity) {
                 $this->flash->notice('You don\'t have permission to access this page! Log in first!');
 
-                $this->response->redirect('/');
+                $this->response->redirect('');
                 return false;
             }
 
             if (!$this->acl->isAllowed($identity->getRoles(), $controllerName, $actionName)) {
                 $this->flash->notice('You don\'t have permission to access this page!');
 
-                $this->response->redirect('/');
+                $this->response->redirect('');
                 return false;
             }
         }
