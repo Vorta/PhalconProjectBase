@@ -4,28 +4,28 @@ namespace Project\Core\Plugin;
 
 use Exception;
 use Phalcon\Config;
-use Phalcon\Dispatcher;
 use Phalcon\Events\Event;
+use Phalcon\Cli\Dispatcher;
+use League\CLImate\CLImate;
 use Phalcon\Mvc\User\Plugin;
 use Phalcon\Logger\AdapterInterface;
-use Project\Core\Exception\TranslationNotFoundException;
-use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
+use Phalcon\Cli\Dispatcher\Exception as DispatcherException;
 
 /**
- * Class ExceptionPlugin - Used to handle exceptions thrown within dispatcher
+ * Class CliExceptionPlugin - Used to handle exceptions thrown within dispatcher
  * @package Project\Core\Plugin
  * @property Config $config
+ * @property CLImate $output
  * @property AdapterInterface $logger
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
-class ExceptionPlugin extends Plugin
+class CliExceptionPlugin extends Plugin
 {
     /**
      * @param Event $event
      * @param Dispatcher $dispatcher
      * @param Exception $exception
      * @return bool
-     * @throws \Phalcon\Exception
      */
     public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception)
     {
@@ -38,37 +38,22 @@ class ExceptionPlugin extends Plugin
             .";\n". $exception->getTraceAsString()
         );
 
-        $forward = [
-            'module'        => 'front',
-            'controller'    => 'error',
-            'action'        => 'show500'
-        ];
-
         switch ($exception) {
-            case $exception instanceof TranslationNotFoundException:
-                $forward['action'] = 'show404';
-                $forward['params'] = [
-                    'lang' => $this->config->get('translations')->defaultLang
-                ];
-                break;
             case $exception instanceof DispatcherException:
                 switch ($exception->getCode()) {
-                    case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
                     case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
-                        $forward['action'] = 'show404';
-                        break;
-                    case Dispatcher::EXCEPTION_CYCLIC_ROUTING:
-                        $forward['action'] = 'show400';
+                    case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                        $this->output->error("Requested operation not recognized");
                         break;
                     default:
-                        $forward['action'] = 'show404';
+                        $this->output->error($exception->getMessage());
                 }
+
                 break;
             default:
-                $forward['action'] = 'show503';
+                $this->output->error("Unexpected error. Check log.");
         }
 
-        $dispatcher->forward($forward);
         return false;
     }
 }

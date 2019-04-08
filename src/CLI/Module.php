@@ -1,18 +1,17 @@
 <?php
 
-namespace Project\Front;
+namespace Project\CLI;
 
 use LogicException;
 use Phalcon\DiInterface;
-use Phalcon\Mvc\ViewInterface;
 use Phalcon\DispatcherInterface;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Mvc\Dispatcher as MvcDispatcher;
 use Phalcon\Cli\Dispatcher as CliDispatcher;
+use Phalcon\Mvc\Dispatcher as MvcDispatcher;
 
 /**
  * Class Module
- * @package Project\Front
+ * @package Project\CLI
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class Module implements ModuleDefinitionInterface
@@ -26,9 +25,7 @@ class Module implements ModuleDefinitionInterface
 //        $loader = new Loader();
 //
 //        $loader->registerNamespaces([
-//            'Project\Front\Controllers' => project_root('src/Controllers'),
-//            'Project\Front\Models'      => project_root('src/Models'),
-//            'Project\Front\Tasks'       => project_root('src/Tasks')
+//            'Project\CLI\Task'
 //        ]);
 //
 //        $loader->register();
@@ -45,19 +42,15 @@ class Module implements ModuleDefinitionInterface
 
         switch ($dispatcher) {
             case $dispatcher instanceof MvcDispatcher:
-                $dispatcher->setDefaultNamespace('Project\Front\Controllers');
+                $dispatcher->setDefaultNamespace('Project\CLI\Controllers');
                 break;
 
             case $dispatcher instanceof CliDispatcher:
-                $dispatcher->setDefaultNamespace('Project\Front\Task');
+                $dispatcher->setDefaultNamespace('Project\CLI\Task');
                 break;
 
             default:
                 throw new LogicException("Unexpected dispatcher variant");
         }
-
-        /** @var ViewInterface $view */
-        $view = $di->get('view');
-        $view->setViewsDir(__DIR__ . '/Views/');
     }
 }

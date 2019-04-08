@@ -17,7 +17,8 @@
         "ext-json": "*",
         "ext-yaml": "*",
         "ext-phalcon": "^3.4",
-        "ext-ds": "*"
+        "ext-ds": "*",
+        "league/climate": "^3.5"
     },
     "require-dev": {
         "fabfuel/prophiler": "^1.6",

@@ -23,7 +23,7 @@ class LoggerProvider implements ServiceProviderInterface
 
             $format     = $format ?: $config->logger->format;
             $filename   = trim($filename ?: $config->logger->filename, '\\/');
-            $path       = project_root($config->application->cacheDir . 'log/');
+            $path       = project_root('var/log/');
 
             if (!file_exists($path)) {
                 mkdir($path, 0777, true);
@@ -33,7 +33,9 @@ class LoggerProvider implements ServiceProviderInterface
             $logger     = new FileLogger($path . $filename);
 
             $logger->setFormatter($formatter);
-            $logger->setLogLevel($config->logger->logLevel);
+            $logger->setLogLevel(constant($config->logger->logLevel));
+
+            $logger->info("Startup");
 
             return $logger;
         });

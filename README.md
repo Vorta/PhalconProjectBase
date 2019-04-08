@@ -2,12 +2,7 @@
 
 This is a base project to be used when starting other projects based on [Phalcon Framework](https://phalconphp.com/).
 
-The project base includes:
-- Standard MVC structure
-- Redis session storage
-- Ready Auth control with permission management
-- Multilingual support
-- Logger
+It is structured for multi-module setup. Basic user registration & login included.
 
 ## Requirements
 The project is tested with and requires:
@@ -16,6 +11,7 @@ The project is tested with and requires:
   - [PhalconPHP 3.4](https://phalconphp.com/) (planned upgrade to 4.0 on its release)
   - [PHP-DS](https://pecl.php.net/package/ds) (not used in the base project; however, I end up using it in most of my projects)
   - [PHP-PSR](https://pecl.php.net/package/psr) (will be required for PhalconPHP 4.0)
+  - [YAML](https://pecl.php.net/package/yaml)
 - MySQL 8.0
 - Redis 5
 
@@ -31,6 +27,19 @@ extension=ds.so
 END
 sudo ln -s /etc/php/7.3/mods-available/ds.ini /etc/php/7.3/fpm/conf.d/20-ds.ini
 sudo ln -s /etc/php/7.3/mods-available/ds.ini /etc/php/7.3/cli/conf.d/20-ds.ini
+```
+
+#### YAML
+```bash
+sudo apt install libyaml-dev
+sudo pecl channel-update pecl.php.net
+sudo pecl install yaml
+
+sudo tee -a /etc/php/7.3/mods-available/yaml.ini << END
+extension=yaml.so
+END
+sudo ln -s /etc/php/7.3/mods-available/yaml.ini /etc/php/7.3/fpm/conf.d/20-yaml.ini
+sudo ln -s /etc/php/7.3/mods-available/yaml.ini /etc/php/7.3/cli/conf.d/20-yaml.ini
 ```
 
 #### PhalconPHP v3.4
@@ -145,6 +154,22 @@ Recommended charset: `utf8mb4_unicode_520_ci`:
 CREATE SCHEMA `phalcon_project` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ```
 
+Create the MySQL user and schema first, after that you can initialize it with:
+```bash
+php bin/console database:initialize
+```
+
+If you are making changes in the models and the database, they have to go in the new version of the schema.
+To make an empty SQL file that follows the app's naming convention, please use:
+```bash
+php bin/console database:touch
+```
+That will create an empty SQL file where you can paste all the changes made in this version.
+Others can then apply those changes easily by using:
+```bash
+php bin/console database:upgrade
+```
+
 ## Running locally
 This base project has a few testing pages available. You can add the following to your hosts file:
 ```
@@ -188,4 +213,10 @@ If you want a specific language to be used on a certain domain instead of langua
 #### Apache (.htaccess)
 ```apacheconfig
     SetEnvIf Host \.hr$ LANG=hr
+```
+
+## Clearing cache
+If you need to clear the cache (e.g. compiled views, cached model metadata) use the following commands:
+```bash
+php bin/console cache:clear
 ```

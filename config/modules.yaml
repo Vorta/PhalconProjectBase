@@ -1,3 +1,5 @@
 front:
     className: Project\Front\Module
-    path: '../src/Front/Module.php'
+
+cli:
+    className: Project\CLI\Module

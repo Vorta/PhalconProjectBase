@@ -17,6 +17,9 @@ class ModelsManagerProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('modelsManager', Manager::class);
+        $di->setShared('modelsManager', function () use ($di) {
+            $di->get('logger')->info('Initializing Model Manager...');
+            return new Manager();
+        });
     }
 }

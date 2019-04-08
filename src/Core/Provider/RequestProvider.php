@@ -18,5 +18,10 @@ class RequestProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $di->setShared('request', Request::class);
+
+        $di->setShared('request', function () use ($di) {
+            $di->get('logger')->info('Initializing Request...');
+            return new Request();
+        });
     }
 }

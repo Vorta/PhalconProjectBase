@@ -3,12 +3,17 @@
 namespace Project;
 
 use Phalcon\Di;
+use Phalcon\Debug;
 use Dotenv\Dotenv;
+use RuntimeException;
 use Phalcon\Application;
 use Phalcon\Config\Exception;
 use Fabfuel\Prophiler\Profiler;
+use Phalcon\Cli\RouterInterface;
 use Phalcon\Config\Adapter\Yaml;
+use Project\Core\Component\CliParser;
 use Phalcon\Mvc\Application as MvcApplication;
+use Phalcon\Cli\Console as ConsoleApplication;
 
 /**
  * Class Kernel
@@ -58,8 +63,9 @@ class Kernel
 
         $this->setupEnvironment();
 
-        if ($_SERVER['APP_ENV'] === self::ENV_DEV) {
-            $this->initializeDebug();
+        if ($_SERVER['APP_ENV'] === self::ENV_DEV && $mode === self::MODE_FPM) {
+            // Initialize web debugger
+            (new Debug())->listen();
         }
 
         $this->di = new Di();
@@ -81,33 +87,33 @@ class Kernel
     {
         switch ($this->mode) {
             case self::MODE_FPM:
-                $this->application = new MvcApplication();
-                $this->application->setEventsManager($this->di->get('eventsManager'));
-                $this->application->setDI($this->di);
-                try {
-                    $modules = new Yaml(project_root('config/modules.yaml'));
-                    $this->application->registerModules($modules->toArray());
-                } catch (Exception $e) {
-                    // No modules, no problem
-                }
+                $this->application = new MvcApplication($this->di);
                 break;
             case self::MODE_CLI:
-                // @TODO - Console application
+                $arguments = CliParser::getArguments();
+                /** @var RouterInterface $router */
+                $router = $this->di->get('router');
+                $router->setDefaultModule($arguments['module']);
+
+                $this->application = new ConsoleApplication($this->di);
+                $this->application->setArgument($arguments, false);
                 break;
             case self::MODE_API:
                 // @TODO - API application
                 break;
             default:
-                throw new \InvalidArgumentException("Unrecognized application mode");
+                throw new RuntimeException("Unrecognized application mode");
         }
-    }
 
-    /**
-     * Initializes debug-related functions
-     */
-    protected function initializeDebug()
-    {
-        (new \Phalcon\Debug())->listen();
+        try {
+            $modules = new Yaml(project_root('config/modules.yaml'));
+
+            $this->application->registerModules($modules->toArray());
+        } catch (Exception $e) {
+            // No modules, no problem
+        }
+
+        $this->application->setEventsManager($this->di->get('eventsManager'));
     }
 
     /**
@@ -118,7 +124,7 @@ class Kernel
         Dotenv::create(project_root())->load();
 
         if (!in_array($_SERVER['APP_ENV'], [self::ENV_DEV, self::ENV_PRODUCTION, self::ENV_STAGING, self::ENV_TEST])) {
-            throw new \InvalidArgumentException("Unrecognized application environment");
+            throw new RuntimeException("Unrecognized application environment");
         }
 
         $this->debug = (bool) (
@@ -134,8 +140,11 @@ class Kernel
     protected function initializeServiceProviders(
         array $providers
     ): self {
-        foreach ($providers as $class) {
-            $this->di->register(new $class());
+        foreach ($providers as $class => $supportedModes) {
+            if (in_array('all', $supportedModes)
+                || in_array($this->mode, $supportedModes)) {
+                $this->di->register(new $class());
+            }
         }
 
         return $this;
@@ -143,15 +152,24 @@ class Kernel
 
     /**
      * Get application output.
-     * @return string
+     * @return string|null
      */
-    public function getOutput(): string
+    public function getOutput(): ?string
     {
         if ($this->application instanceof MvcApplication) {
             return $this->application->handle()->getContent();
         }
 
-        return $this->application->handle();
+        $this->application->handle();
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMode(): string
+    {
+        return $this->mode;
     }
 
     /**

@@ -12,7 +12,7 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * Class Group
  * @package Project\Core\Models
- * @method static Group|bool findFirstById(int $id)
+ * @method static Group|false findFirstById(int $id)
  * @property Simple $users
  */
 class Group extends Model

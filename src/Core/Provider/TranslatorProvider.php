@@ -24,6 +24,7 @@ class TranslatorProvider implements ServiceProviderInterface
 
             // Get language. Fallback to default if language was not received
             $lang = $language ?? $config->translations->defaultLang;
+            $di->get('logger')->info("Initializing Translator ($lang)...");
 
             $path = project_root("config/translations/$lang.yaml");
 

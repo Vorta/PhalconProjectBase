@@ -5,8 +5,8 @@ namespace Project\Core\Provider;
 use Phalcon\Mvc\Router;
 use Phalcon\DiInterface;
 use Phalcon\Config\Adapter\Yaml;
-use Phalcon\Di\ServiceProviderInterface;
 use Project\Core\Component\Translator;
+use Phalcon\Di\ServiceProviderInterface;
 
 /**
  * Class RouterProvider
@@ -21,6 +21,7 @@ class RouterProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $di->setShared('router', function () use ($di) {
+            $di->get('logger')->info('Initializing Router...');
             $router = new Router(false);
             $router->removeExtraSlashes(true);
 

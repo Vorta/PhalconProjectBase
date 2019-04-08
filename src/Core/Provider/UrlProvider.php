@@ -18,7 +18,8 @@ class UrlProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('url', function () {
+        $di->setShared('url', function () use ($di) {
+            $di->get('logger')->info('Initializing Url...');
             $url = new Url();
 
             preg_match(

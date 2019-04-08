@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+use Project\Kernel;
+
+define('APP_START_TIME', microtime(true));
+define('APP_START_MEMORY', memory_get_usage());
+
+require_once __DIR__ .'/../vendor/autoload.php';
+
+$kernel = new Kernel(Kernel::MODE_CLI);
+echo $kernel->getOutput();
+
+echo PHP_EOL ."Executed in ". (round((microtime(true) - APP_START_TIME) * 100000)/100) ."ms". PHP_EOL;

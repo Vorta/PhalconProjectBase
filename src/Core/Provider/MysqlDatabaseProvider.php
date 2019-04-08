@@ -18,10 +18,16 @@ class MysqlDatabaseProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $di->setShared('db', function () use ($di) {
-            $config = $di->get('config');
-            $dbAdapter = new Mysql(
-                $config->database->toArray()
-            );
+            $di->get('logger')->info('Initializing Database...');
+            $dbConf = $di->get('config')->get('database');
+
+            $dbAdapter = new Mysql([
+                 'host'     => $dbConf->host,
+                 'dbname'   => $dbConf->dbname,
+                 'port'     => $dbConf->port,
+                 'username' => $dbConf->username,
+                 'password' => $dbConf->password,
+            ]);
             $dbAdapter->setEventsManager(
                 $di->get('eventsManager')
             );

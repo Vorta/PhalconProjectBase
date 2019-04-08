@@ -17,6 +17,9 @@ class EscaperProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('escaper', Escaper::class);
+        $di->setShared('escaper', function () use ($di) {
+            $di->get('logger')->info('Initializing Escaper...');
+            return new Escaper();
+        });
     }
 }

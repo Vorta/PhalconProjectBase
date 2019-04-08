@@ -18,7 +18,8 @@ class TagProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('tag', function () {
+        $di->setShared('tag', function () use ($di) {
+            $di->get('logger')->info('Initializing Tag...');
             Tag::setDoctype(Tag::HTML5);
             return new Tag();
         });

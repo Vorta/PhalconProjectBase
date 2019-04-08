@@ -18,6 +18,7 @@ class CryptProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $di->setShared('crypt', function () use ($di) {
+            $di->get('logger')->info('Initializing Crypt...');
             $config = $di->get('config');
 
             $crypt = new Crypt();

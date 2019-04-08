@@ -18,6 +18,7 @@ class ModelsMetadataProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $di->setShared('modelsMetadata', function () use ($di) {
+            $di->get('logger')->info('Initializing Models MetaData...');
             $config = $di->get('config');
             return new MetaDataAdapter($config->redis->toArray());
         });

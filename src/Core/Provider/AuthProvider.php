@@ -17,6 +17,9 @@ class AuthProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('auth', Auth::class);
+        $di->setShared('auth', function () use ($di) {
+            $di->get('logger')->info('Initializing Auth...');
+            return new Auth();
+        });
     }
 }

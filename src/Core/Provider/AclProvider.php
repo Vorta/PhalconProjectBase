@@ -17,6 +17,9 @@ class AclProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('acl', Acl::class);
+        $di->setShared('acl', function () use ($di) {
+            $di->get('logger')->info('Initializing Acl...');
+            return new Acl();
+        });
     }
 }

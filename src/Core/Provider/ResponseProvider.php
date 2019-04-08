@@ -17,6 +17,9 @@ class ResponseProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('response', Response::class);
+        $di->setShared('response', function () use ($di) {
+            $di->get('logger')->info('Initializing Response...');
+            return new Response();
+        });
     }
 }

@@ -17,6 +17,11 @@ class EventsManagerProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('eventsManager', EventsManager::class);
+        $di->setShared('eventsManager', function () use ($di) {
+            $di->get('logger')->info('Initializing Events Manager...');
+            $em = new EventsManager();
+            $em->enablePriorities(true);
+            return $em;
+        });
     }
 }

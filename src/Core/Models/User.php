@@ -13,9 +13,9 @@ use Phalcon\Validation\Validator\PresenceOf;
  * Class User
  * @package Project\Core\Models
  * @property Group|bool $group
- * @method static User|bool findFirstById(int $id)
- * @method static User|bool findFirstByEmail(string $email)
- * @method static User|bool findFirstByUsername(string $username)
+ * @method static User|false findFirstById(int $id)
+ * @method static User|false findFirstByEmail(string $email)
+ * @method static User|false findFirstByUsername(string $username)
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
 class User extends Model

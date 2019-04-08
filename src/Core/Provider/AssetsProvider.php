@@ -17,6 +17,9 @@ class AssetsProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('assets', AssetsManager::class);
+        $di->setShared('assets', function () use ($di) {
+            $di->get('logger')->info('Initializing Assets...');
+            return new AssetsManager();
+        });
     }
 }

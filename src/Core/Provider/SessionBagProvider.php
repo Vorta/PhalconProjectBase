@@ -17,7 +17,8 @@ class SessionBagProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('sessionBag', function (?string $name) {
+        $di->setShared('sessionBag', function (?string $name) use ($di) {
+            $di->get('logger')->info("Initializing Session Bag ($name)...");
             return new Bag($name);
         });
     }

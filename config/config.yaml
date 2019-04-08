@@ -1,10 +1,13 @@
 database:
     adapter:    'Mysql'
     host:       'localhost'
+    port:       3306
     dbname:     'phalcon_project'
     username:   'phalcon_project_user'
     password:   'Ruc=$6&AneJ@WAze?aS6eNEprUF3#Tas'
     charset:    'utf8mb4'
+    collation:  'utf8mb4_unicode_520_ci'
+    engine:     'InnoDB'
 
 redis:
     uniqueId:   'phalcon_project'
@@ -16,13 +19,14 @@ redis:
 
 application:
     cryptSalt:  'm&YSF7!XbCpuZ@cr!J?hfXK=#$up?d?7B#ukjCj^$QqYkGzrbV#qy@x!gFA*?9T*'
-    cacheDir:   'var/'
+    cacheDir:   'var/cache/'
+    schemaDir:  'schemas/'
 
 logger:
     filename:   'app.log'
     format:     '[%date%][%type%]: %message%'
     date:       'Y-m-d H:i:s'
-    logLevel:   !php/const Phalcon\Logger::DEBUG
+    logLevel:   Phalcon\Logger::DEBUG
 
 translations:
     defaultLang: 'en'

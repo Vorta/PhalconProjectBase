@@ -17,7 +17,8 @@ class FlashProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('flash', function () {
+        $di->setShared('flash', function () use ($di) {
+            $di->get('logger')->info('Initializing Flash...');
             $flash = new Flash([
                 'error'   => 'alert alert-danger',
                 'success' => 'alert alert-success',

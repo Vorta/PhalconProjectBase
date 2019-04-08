@@ -18,7 +18,7 @@ class SessionProvider implements ServiceProviderInterface
     public function register(DiInterface $di)
     {
         $di->setShared('session', function () use ($di) {
-            $di->get('logger')->info("Session initialized");
+            $di->get('logger')->info('Initializing Session Adapter...');
             $config = $di->get('config');
             $session = new SessionAdapter($config->redis->toArray());
             $session->start();

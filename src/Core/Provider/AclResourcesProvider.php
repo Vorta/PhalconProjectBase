@@ -17,7 +17,8 @@ class AclResourcesProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('aclResources', function () {
+        $di->setShared('aclResources', function () use ($di) {
+            $di->get('logger')->info('Initializing Acl resources...');
             return new Yaml(project_root('config/security/access_control.yaml'));
         });
     }

@@ -17,7 +17,8 @@ class SecurityProvider implements ServiceProviderInterface
      */
     public function register(DiInterface $di)
     {
-        $di->setShared('security', function () {
+        $di->setShared('security', function () use ($di) {
+            $di->get('logger')->info('Initializing Security...');
             $security = new Security();
             $security->setWorkFactor(13);
             return $security;
